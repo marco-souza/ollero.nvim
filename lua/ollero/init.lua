@@ -14,7 +14,7 @@ end
 function M.open()
   -- Display the input box
   win.input(
-    { prompt = "Ask to 🦙:", width = WIN_W },
+    { prompt = "Ask to 🦙:", width = WIN_W, height = 1 },
     function (input)
       local shellCmd = "echo '" .. input .. "' | ollama run llama2"
       local handler = io.popen(shellCmd)

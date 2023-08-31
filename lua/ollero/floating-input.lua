@@ -2,11 +2,11 @@ local utils = require("shared.utils")
 
 local M = {}
 
-function M.window_center(input_width)
+function M.window_center(width, height)
   return {
     relative = "win",
-    row = vim.api.nvim_win_get_height(0) / 2 - 1,
-    col = vim.api.nvim_win_get_width(0) / 2 - input_width / 2,
+    row = vim.api.nvim_win_get_height(0) / 2 - height / 2,
+    col = vim.api.nvim_win_get_width(0) / 2 - width / 2,
   }
 end
 
@@ -20,16 +20,22 @@ function M._win_config(opts)
     width = vim.api.nvim_win_get_width(0) - 20
   end
 
+  -- Calculate a minimal height with a bit buffer
+  local height = opts.height
+  if not height or height + 20 > vim.api.nvim_win_get_height(0) then
+    height = vim.api.nvim_win_get_height(0) - 20
+  end
+
   local default_win_config = {
     focusable = true,
     style = "minimal",
     border = "rounded",
     width = width,
-    height = 1,
+    height = height,
     title = prompt,
   }
 
-  default_win_config = vim.tbl_deep_extend("force", default_win_config, M.window_center(width))
+  default_win_config = vim.tbl_deep_extend("force", default_win_config, M.window_center(width, height))
 
   -- Apply user's window config.
   win_config = vim.tbl_deep_extend("force", default_win_config, win_config)
@@ -37,13 +43,12 @@ function M._win_config(opts)
 end
 
 function M.output(opts, on_close)
-  local output = opts.output or { "" }
+  local output = utils.split_lines(opts.output or { "" })
   local win_config = M._win_config(opts)
-  win_config.height = 4
 
   local buffer = vim.api.nvim_create_buf(false, true)
   local window = vim.api.nvim_open_win(buffer, true, win_config)
-  vim.api.nvim_buf_set_lines(buffer,0, 0, true, utils.split_lines(output))
+  vim.api.nvim_buf_set_lines(buffer,0, 0, true, output)
 
   -- Enter, Esc or q to close
   local close_win = function()
