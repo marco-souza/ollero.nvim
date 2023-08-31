@@ -51,16 +51,31 @@ function M.output(opts, on_close)
   vim.api.nvim_buf_set_lines(buffer,0, 0, true, output)
 
   -- Enter, Esc or q to close
-  local close_win = function()
-    vim.api.nvim_win_close(window, true)
+  local close_win = function(keep_win)
+    return function ()
+      vim.api.nvim_win_close(window, true)
 
-    if on_close then on_close() end
+      if not keep_win and on_close then
+        on_close()
+      end
+    end
   end
 
   -- vim.keymap.set({ 'n', 'i', 'v' }, '<cr>', M.input({), { buffer = buffer })
-  vim.keymap.set({ 'n', 'i', 'v' }, '<cr>', close_win, { buffer = buffer })
+  vim.keymap.set({ 'n', 'i', 'v' }, '<cr>', close_win(false), { buffer = buffer })
   vim.keymap.set("n", "<esc>", close_win, { buffer = buffer })
   vim.keymap.set("n", "q", close_win, { buffer = buffer })
+end
+
+local loading_llama = function(window)
+  local loading_text = "🦙 loading";
+  local buffer = vim.api.nvim_create_buf(false, true)
+
+  vim.api.nvim_buf_set_text(buffer, 0, 0, 0, 0, { loading_text })
+  vim.api.nvim_win_set_buf(window, buffer)
+  vim.api.nvim_win_set_cursor(window, { 1, vim.str_utfindex(loading_text) + 1  })
+
+  return buffer
 end
 
 function M.input(opts, on_confirm)
@@ -78,12 +93,17 @@ function M.input(opts, on_confirm)
 
   -- Enter to confirm
   vim.keymap.set({ 'n', 'i', 'v' }, '<cr>', function()
+    loading_llama(window)
+
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, 1, false)
-    if lines[1] ~= default and on_confirm then
+    if lines[1] ~= default then
+      local input = lines[1]
       vim.cmd('stopinsert')
       vim.api.nvim_win_close(window, true)
 
-      on_confirm(lines[1])
+      if on_confirm then
+        on_confirm(input)
+      end
     end
   end, { buffer = buffer })
 
