@@ -7,7 +7,7 @@ The backlog of this project includes features like:
 - manage LLMs through Neovim
 - manage AI Prompts
 - selected to prompt
-- code completion
+- text completion
 
 ## Dependencies
 
