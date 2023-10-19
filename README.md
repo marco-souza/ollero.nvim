@@ -1,10 +1,19 @@
 # 👁️llero 🦙
 
-Ollero is a neovim plugin to run Llama2 inside vim using `ollama`
+Ollero (ollero.nvim) is a Neovim Plugin that unleashes Ollama powers to your text editor.
+
+The backlog of this project includes features like:
+- **use offline LLM through Ollama API** (WIP 🚧)
+- manage LLMs through Neovim
+- manage AI Prompts
+- selected to prompt
+- code completion
 
 ## Dependencies
 
 You must have `ollama` installed and running on your machine
+
+> You can donwload/install Ollama from https://ollama.ai/
 
 ## Usage
 
