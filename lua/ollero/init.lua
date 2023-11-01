@@ -1,5 +1,6 @@
-Name = "Ollama Chat"
+Name = "Ollero"
 Description = "A plugin to open an input box for chating with Ollama"
+local terminal = require("nvterm.terminal")
 
 -- local uv = require("luv")
 -- local a = require("plenary.async")
@@ -9,6 +10,13 @@ local llama = require("ollero.llama")
 local WIN_W = 120
 
 local M = {}
+
+function M.setup()
+  -- setup
+  terminal.toggle("vertical")
+  terminal.send("ollama run llama2", "vertical")
+  terminal.toggle("vertical")
+end
 
 function M.open()
   local opts = { prompt = "Ask to 🦙:", width = WIN_W, height = 1 }
@@ -25,6 +33,10 @@ function M.open()
       )
     end) -- async
   end)
+end
+
+function M.openTerm()
+  terminal.toggle("vertical")
 end
 
 return M
