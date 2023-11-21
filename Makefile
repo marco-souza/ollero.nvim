@@ -7,3 +7,4 @@ lint:
 	luacheck lua/ --globals vim
 
 pr-ready: fmt lint
+  git commit
