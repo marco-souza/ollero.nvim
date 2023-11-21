@@ -37,12 +37,19 @@ function M.open()
   end)
 end
 
+
 function M.openTerm()
   terminal.toggle("vertical")
 end
 
+
 function M.list_llms()
-  require("ollero.ollama").list()
+  local output = require("ollero.ollama").list()
+  -- show llms installed
+  win.output(
+    { prompt = "🦙 said:", width = WIN_W, output = output },
+    function() end
+  )
 end
 
 
