@@ -1,7 +1,6 @@
 local M = {}
 
-
-function M.ask_llama(input, callback)
+function M.ask_ollama(input, callback)
   -- TODO: make this async to avoid blocking main thread to show loading
   local shellCmd = "echo '" .. input .. "' | ollama run llama2"
   local handler = io.popen(shellCmd)
@@ -17,4 +16,12 @@ function M.ask_llama(input, callback)
   return output
 end
 
-return M
+
+function M.list()
+  print("To be implemented")
+  local sh_script = "ollama ls | grep : | awk '{ printf \"%sv;%s;%s %s;%s %s %s\n\", $1, $2, $3, $4, $5, $6, $7 }'"
+  local output = vim.fn.system(sh_script)
+  vim.notify(output)
+end
+
+return  M

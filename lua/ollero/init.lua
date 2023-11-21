@@ -5,7 +5,6 @@ local terminal = require("nvterm.terminal")
 -- local uv = require("luv")
 -- local a = require("plenary.async")
 local win = require("ollero.floating-input")
-local llama = require("ollero.llama")
 
 local WIN_W = 120
 
@@ -24,19 +23,27 @@ function M.open()
   win.input(opts, function(input)
     local close_loading = win.loading_llama(opts)
 
-    llama.ask_llama(input, function(output)
-      close_loading()
+    require("ollero.ollama").ask_llama(
+      input,
+      function(output)
+        close_loading()
 
-      win.output(
-        { prompt = "🦙 said:", width = WIN_W, output = output },
-        M.open
-      )
-    end) -- async
+        win.output(
+          { prompt = "🦙 said:", width = WIN_W, output = output },
+          M.open
+        )
+      end
+    ) -- async
   end)
 end
 
 function M.openTerm()
   terminal.toggle("vertical")
 end
+
+function M.list_llms()
+  require("ollero.ollama").list()
+end
+
 
 return M
