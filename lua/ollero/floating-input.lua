@@ -1,4 +1,3 @@
-local a = require("plenary.async")
 local utils = require("shared.utils")
 
 local M = {}
@@ -87,7 +86,7 @@ function M.output(opts, on_enter)
   end, { buffer = b })
 end
 
-function M.loading_llama(opts, rx)
+function M.loading_llama(opts)
   local loading_text = "🦙 loading"
   local w, _, cleanup = M.create_win(opts, { loading_text })
 

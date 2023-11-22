@@ -7,4 +7,5 @@ lint:
 	luacheck lua/ --globals vim
 
 pr-ready: fmt lint
-  git commit
+	echo "===> Preparring PR"
+	git commit

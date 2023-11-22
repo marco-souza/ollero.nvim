@@ -39,6 +39,4 @@ function M.exec(shellCmd, callback)
   return output
 end
 
-
-
 return M

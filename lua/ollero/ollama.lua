@@ -9,11 +9,10 @@ function M.ask_ollama(input, callback)
   return exec(sh_script, callback)
 end
 
-
 function M.list(callback)
   -- local sh_script = "ollama ls | grep : | awk '{ printf \"%sv;%s;%s %s;%s %s %s\\n\", $1, $2, $3, $4, $5, $6, $7 }'"
   local sh_script = "ollama ls | grep :"
   return exec(sh_script, callback or noop)
 end
 
-return  M
+return M
