@@ -10,19 +10,13 @@ local WIN_W = 120
 local M = {}
 
 local apply_commands = function(mappings)
-  for k, v in pairs(mappings) do
-    local command = k
-    local handler = v
-
+  for command, handler in pairs(mappings) do
     vim.api.nvim_create_user_command(command, handler, {})
   end
 end
 
 local apply_mappings = function(mappings)
-  for k, v in pairs(mappings) do
-    local mapping = k
-    local handler = v
-
+  for mapping, handler in pairs(mappings) do
     vim.keymap.set(
       { "n", "v", "i", "t" },
       mapping,
@@ -33,6 +27,9 @@ local apply_mappings = function(mappings)
 end
 
 function M.setup()
+  -- dependencies setup
+  require("telescope").load_extension("ui-select")
+
   -- setup
   terminal.toggle("vertical")
   terminal.send("ollama run llama2", "vertical")
@@ -79,11 +76,15 @@ end
 
 function M.list_llms()
   local output = require("ollero.ollama").list()
-  -- show llms installed
-  win.output(
-    { prompt = "🦙 said:", width = WIN_W, output = output },
-    function() end
-  )
+  local options = require("shared.utils").split_lines(output)
+
+  ---@param choice string
+  local function on_select(choice)
+    -- TODO: do something with this
+    vim.notify(choice)
+  end
+
+  vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
 end
 
 return M
