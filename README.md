@@ -26,6 +26,7 @@ dependencies
   "marco-souza/ollero.nvim",
   name = "ollero",
   dependencies = {
+    "NvChad/nvterm",
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-ui-select.nvim",
   },
