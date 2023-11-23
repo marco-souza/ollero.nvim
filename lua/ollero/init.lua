@@ -12,7 +12,7 @@ local M = {}
 local apply_commands = function(mappings)
   for k, v in pairs(mappings) do
     local command = k
-    local handler = v[1]
+    local handler = v
 
     vim.api.nvim_create_user_command(command, handler, {})
   end
@@ -21,7 +21,7 @@ end
 local apply_mappings = function(mappings)
   for k, v in pairs(mappings) do
     local mapping = k
-    local handler = v[1]
+    local handler = v
 
     vim.keymap.set(
       { "n", "v", "i", "t" },
@@ -40,14 +40,19 @@ function M.setup()
 
   -- create commands
   apply_commands({
-    ["Chat"] = { M.openTerm },
-    ["Ask"] = { M.open },
+    ["Chat"] = M.openTerm,
+    ["Ask"] = M.open,
+    ["ListModels"] = M.list_llms,
   })
 
   -- add keymaps
   apply_mappings({
-    ["<leader>aa"] = { M.openTerm },
-    ["<leader>ac"] = { M.open },
+    ["<M-a>"] = function()
+      vim.cmd("Chat")
+    end,
+    ["<M-s>"] = function()
+      vim.cmd("Ask")
+    end,
   })
 end
 
