@@ -39,4 +39,22 @@ function M.exec(shellCmd, callback)
   return output
 end
 
+function M.get_visual_selection()
+  local vstart = vim.fn.getpos("'<")
+  local vend = vim.fn.getpos("'>")
+
+  local line_start = vstart[2]
+  local line_end = vend[2]
+
+  -- or use api.nvim_buf_get_lines
+  local lines = vim.api.nvim_buf_get_lines(
+    vim.api.nvim_get_current_buf(),
+    line_start,
+    line_end,
+    false
+  )
+
+  return table.concat(lines, "\n")
+end
+
 return M

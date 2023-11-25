@@ -12,7 +12,6 @@ local Term = {}
 ---@param buffer uv.buffer
 ---@return boolean
 local function is_buf_hidden(buffer)
-  -- vim.api.nvim_buf_set_name(buf, "term://" .. cmd)
   local buf_info = vim.fn.getbufinfo(buffer)[1]
   return buf_info.hidden == 1
 end
@@ -56,10 +55,12 @@ function Term.start(cmd)
   vim.api.nvim_win_hide(win)
 end
 
----@param cmd string
-function Term.send(cmd)
-  if vim.api.nvim_buf_is_valid(buf) then
-    vim.api.nvim_chan_send(buf, cmd)
+---@param input string
+function Term.send(input)
+  if vim.api.nvim_buf_is_valid(buf) and is_buf_hidden(buf) then
+    P("sending" .. input)
+    show_term()
+    vim.api.nvim_chan_send(vim.bo.channel, input)
   end
 end
 

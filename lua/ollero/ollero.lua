@@ -24,6 +24,9 @@ function Ollero.init()
     ["<M-a>"] = function()
       vim.cmd("Chat")
     end,
+    ["<M-s>"] = function()
+      Ollero.searchSelection()
+    end,
   })
 end
 
@@ -33,6 +36,13 @@ function Ollero.chat(input)
   term.toggle()
 end
 
+---Open search selection
+function Ollero.searchSelection()
+  local selected_text = utils.get_visual_selection()
+  term.send(selected_text)
+end
+
+---List Models
 function Ollero.list_models()
   ollama.list(function(output)
     local options = utils.split_lines(output)
