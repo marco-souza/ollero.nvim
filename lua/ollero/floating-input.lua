@@ -10,7 +10,7 @@ function M.window_center(width, height)
   }
 end
 
-function M._win_config(opts)
+function M.win_config(opts)
   local prompt = opts.prompt or "Input: "
   local win_config = {}
 
@@ -52,25 +52,23 @@ function M._win_config(opts)
   return win_config
 end
 
-function M.create_win(opts, output)
-  local win_config = M._win_config(opts)
+function M.create_win(opts)
   local buffer = vim.api.nvim_create_buf(false, true)
-  local window = vim.api.nvim_open_win(buffer, true, win_config)
+  local window = vim.api.nvim_open_win(buffer, true, M.win_config(opts))
 
-  output = output or { opts.default }
-
-  vim.api.nvim_buf_set_lines(buffer, 0, 0, 0, output)
+  -- output = output or { opts.default }
+  -- vim.api.nvim_buf_set_lines(buffer, 0, 0, 0, output)
 
   -- Enter, Esc or q to close
-  local cleanup = function()
-    vim.api.nvim_win_close(window, true)
-    vim.api.nvim_buf_delete(buffer, { force = true })
-  end
+  -- local cleanup = function()
+  --   vim.api.nvim_win_close(window, true)
+  --   vim.api.nvim_buf_delete(buffer, { force = true })
+  -- end
 
-  vim.keymap.set("n", "<esc>", cleanup, { buffer = buffer })
-  vim.keymap.set("n", "q", cleanup, { buffer = buffer })
+  -- vim.keymap.set("n", "<esc>", cleanup, { buffer = buffer })
+  -- vim.keymap.set("n", "q", cleanup, { buffer = buffer })
 
-  return window, buffer, cleanup
+  return window, buffer
 end
 
 function M.output(opts, on_enter)
