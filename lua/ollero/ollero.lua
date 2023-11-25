@@ -1,5 +1,5 @@
-local terminal = require("nvterm.terminal")
 local utils = require("shared.utils")
+local term = require("ollero.term")
 local ollama = require("ollero.ollama")
 local commands = require("ollero.commands")
 
@@ -12,13 +12,11 @@ function Ollero.init()
   require("telescope").load_extension("ui-select")
 
   -- setup
-  terminal.toggle("vertical")
-  terminal.send("ollama run llama2", "vertical")
-  terminal.toggle("vertical")
+  term.start("ollama run llama2")
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
-    ["CreateModel"] = Ollero.list_models,
+    ["RunModel"] = Ollero.list_models,
     ["ListModels"] = Ollero.list_models,
   })
 
@@ -30,8 +28,9 @@ function Ollero.init()
 end
 
 ---Open chat
-function Ollero.chat()
-  terminal.toggle("vertical")
+function Ollero.chat(input)
+  P(input)
+  term.toggle()
 end
 
 function Ollero.list_models()
