@@ -5,9 +5,8 @@ local Ollama = {}
 
 ---@param callback function | nil
 function Ollama.list(callback)
-  -- local sh_script = "ollama ls | grep : | awk '{ printf \"%sv;%s;%s %s;%s %s %s\\n\", $1, $2, $3, $4, $5, $6, $7 }'"
-  local sh_script = "ollama ls | grep : | awk '{ printf \"%s\\n\", $1 }'"
-  -- local sh_script = "ollama ls | grep :"
+  local sh_script =
+    "ollama ls | grep : | awk '{ print $1 }' | awk -F ':' '{ print $1 }' "
   return exec(sh_script, callback or noop)
 end
 

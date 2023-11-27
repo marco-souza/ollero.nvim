@@ -16,7 +16,7 @@ function Ollero.init()
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
-    ["RunModel"] = Ollero.list_models,
+    ["RunModel"] = Ollero.run_model,
     ["ListModels"] = Ollero.list_models,
   })
 
@@ -25,7 +25,7 @@ function Ollero.init()
       vim.cmd("Chat")
     end,
     ["<M-s>"] = function()
-      Ollero.searchSelection()
+      Ollero.search_selection()
     end,
   })
 end
@@ -37,7 +37,7 @@ function Ollero.chat(input)
 end
 
 ---Open search selection
-function Ollero.searchSelection()
+function Ollero.search_selection()
   local selected_text = utils.get_visual_selection()
   term.send(selected_text)
 end
@@ -53,6 +53,25 @@ function Ollero.list_models()
     end
 
     vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
+  end)
+end
+
+---Run Model
+function Ollero.run_model()
+  ollama.list(function(output)
+    local options = utils.split_lines(output)
+
+    vim.ui.select(
+      options,
+      { prompt = "Select a model to run" },
+      function(choice)
+        if choice == nil then
+          return
+        end
+
+        term.start("ollama run " .. choice)
+      end
+    )
   end)
 end
 
