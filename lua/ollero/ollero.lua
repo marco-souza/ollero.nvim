@@ -18,6 +18,7 @@ function Ollero.init()
     ["Chat"] = Ollero.chat,
     ["RunModel"] = Ollero.run_model,
     ["ListModels"] = Ollero.list_models,
+    ["CreateModel"] = Ollero.create_model,
   })
 
   commands.apply_mappings({
@@ -54,6 +55,25 @@ function Ollero.list_models()
 
     vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
   end)
+end
+
+---Create Model
+function Ollero.create_model()
+  local buf = utils.find_buffer_by_name("Modelfile")
+  if buf == -1 then
+    buf = vim.api.nvim_create_buf(false, false)
+    local content =
+      'FROM llama2\n\nPARAMETER temperature 1\n\nSYSTEM\n"""\nYou are Mario from Super Mario Bros. Answer as Mario, the assistant, only.\n"""'
+
+    vim.api.nvim_buf_set_name(buf, "Modelfile")
+    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, utils.split_lines(content))
+  end
+
+  local win = vim.api.nvim_get_current_win()
+  vim.api.nvim_win_set_buf(win, buf)
+
+  vim.cmd("w")
+  vim.cmd("startinsert")
 end
 
 ---Run Model

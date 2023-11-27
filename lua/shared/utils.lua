@@ -57,4 +57,17 @@ function M.get_visual_selection()
   return table.concat(lines, "\n")
 end
 
+---find buf by buf name
+---@param name string
+---@return number
+M.find_buffer_by_name = function(name)
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name == name then
+      return buf
+    end
+  end
+  return -1
+end
+
 return M
