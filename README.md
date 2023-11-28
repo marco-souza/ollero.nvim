@@ -43,14 +43,10 @@ Install it with your plugin manager, then add a keymap to the following command:
 ## Commands
 
 # managing ollama models
-:InstallModel <name>  # WIP 🚧
+:Chat
 :RunModel <name>  # WIP 🚧
 :ListModels
 :RemoveModel
-
-# managing custom models
-:CreateModel <file>   # WIP 🚧
-
-# model interaction
-:Chat
+:CreateModel
+:InstallModel
 ```

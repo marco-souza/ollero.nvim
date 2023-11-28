@@ -12,7 +12,7 @@ function Ollero.init()
   require("telescope").load_extension("ui-select")
 
   -- setup
-  term.start("ollama run llama2")
+  -- term.start("ollama run llama2")
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -20,6 +20,7 @@ function Ollero.init()
     ["ListModels"] = Ollero.list_models,
     ["RemoveModel"] = Ollero.remove_model,
     ["CreateModel"] = Ollero.create_model,
+    ["InstallModel"] = Ollero.install_model,
   })
 
   commands.apply_mappings({
@@ -81,6 +82,24 @@ function Ollero.remove_model()
       { prompt = "🗑️ Select a model to removed" },
       on_select
     )
+  end)
+end
+
+---Install Model
+function Ollero.install_model()
+  ---@param model string
+  local function on_select(model)
+    if model == nil then
+      return
+    end
+
+    ollama.install(model, function()
+      vim.notify(model .. " installed!")
+    end)
+  end
+
+  ollama.list_remote(function(options)
+    vim.ui.select(options, { prompt = "🗂️ Install a model" }, on_select)
   end)
 end
 

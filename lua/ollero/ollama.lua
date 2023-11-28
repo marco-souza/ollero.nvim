@@ -3,10 +3,34 @@ local exec = require("shared.utils").exec
 
 local Ollama = {}
 
+---@param callback function(options: string) | nil
+function Ollama.list_remote(callback)
+  -- TODO: load this from https://ollama.ai/library
+  local options = {
+    "llama2",
+    "mistral",
+    "orca-mini",
+    "codellama",
+    "llama2-uncensored",
+    "vicuna",
+    "wizard-vicuna-uncensored",
+  }
+  local cb = callback or noop
+  return cb(options)
+end
+
 ---@param callback function | nil
 function Ollama.list(callback)
   local sh_script =
     "ollama ls | grep : | awk '{ print $1 }' | awk -F ':' '{ print $1 }' "
+  return exec(sh_script, callback or noop)
+end
+
+---@param model string
+---@param callback function | nil
+function Ollama.install(model, callback)
+  vim.notify("Installing " .. model .. "...")
+  local sh_script = "ollama pull " .. model
   return exec(sh_script, callback or noop)
 end
 
