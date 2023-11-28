@@ -1,4 +1,4 @@
-local w = require("ollero.floating-input")
+local w = require("ollero.window")
 
 -- constructor
 local title = "👁️llero 🦙"
