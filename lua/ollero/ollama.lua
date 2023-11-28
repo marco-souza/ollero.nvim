@@ -49,4 +49,11 @@ function Ollama.create_model(filepath, callback)
   return exec(sh_script, callback or noop)
 end
 
+---@param model_name string
+---@param callback function
+function Ollama.build_model(model_name, callback)
+  local sh_script = "ollama create -f Modelfile " .. model_name
+  return exec(sh_script, callback or noop)
+end
+
 return Ollama

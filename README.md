@@ -47,6 +47,9 @@ Install it with your plugin manager, then add a keymap to the following command:
 :RunModel <name>  # WIP 🚧
 :ListModels
 :RemoveModel
-:CreateModel
 :InstallModel
+
+# manafing model files
+:CreateModel
+:BuildModel
 ```

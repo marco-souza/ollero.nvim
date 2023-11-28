@@ -19,6 +19,7 @@ function Ollero.init()
     ["RunModel"] = Ollero.run_model,
     ["ListModels"] = Ollero.list_models,
     ["RemoveModel"] = Ollero.remove_model,
+    ["BuildModel"] = Ollero.build_model,
     ["CreateModel"] = Ollero.create_model,
     ["InstallModel"] = Ollero.install_model,
   })
@@ -100,6 +101,15 @@ function Ollero.install_model()
 
   ollama.list_remote(function(options)
     vim.ui.select(options, { prompt = "🗂️ Install a model" }, on_select)
+  end)
+end
+
+---Build Model
+function Ollero.build_model()
+  vim.ui.input({ prompt = "Enter model name: " }, function(input)
+    ollama.build_model(input, function()
+      vim.notify("Model " .. input .. " created")
+    end)
   end)
 end
 
