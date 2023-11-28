@@ -26,7 +26,6 @@ dependencies
   "marco-souza/ollero.nvim",
   name = "ollero",
   dependencies = {
-    "NvChad/nvterm",
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-ui-select.nvim",
   },
@@ -45,13 +44,13 @@ Install it with your plugin manager, then add a keymap to the following command:
 
 # managing ollama models
 :InstallModel <name>  # WIP 🚧
-:RemoveModel <name>   # WIP 🚧
+:RunModel <name>  # WIP 🚧
 :ListModels
+:RemoveModel
 
 # managing custom models
 :CreateModel <file>   # WIP 🚧
 
 # model interaction
 :Chat
-:Ask
 ```
