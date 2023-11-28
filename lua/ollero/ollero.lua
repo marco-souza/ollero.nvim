@@ -18,6 +18,7 @@ function Ollero.init()
     ["Chat"] = Ollero.chat,
     ["RunModel"] = Ollero.run_model,
     ["ListModels"] = Ollero.list_models,
+    ["RemoveModel"] = Ollero.remove_model,
     ["CreateModel"] = Ollero.create_model,
   })
 
@@ -54,6 +55,32 @@ function Ollero.list_models()
     end
 
     vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
+  end)
+end
+
+---Remove Model
+function Ollero.remove_model()
+  ollama.list(function(output)
+    local options = utils.split_lines(output)
+
+    ---@param model string
+    local function on_select(model)
+      if model == nil then
+        return
+      end
+
+      vim.notify("Removing " .. model .. "...")
+
+      ollama.rm(model, function()
+        vim.notify(model .. " removed!")
+      end)
+    end
+
+    vim.ui.select(
+      options,
+      { prompt = "🗑️ Select a model to removed" },
+      on_select
+    )
   end)
 end
 
