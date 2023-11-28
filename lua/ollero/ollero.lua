@@ -12,7 +12,7 @@ function Ollero.init()
   require("telescope").load_extension("ui-select")
 
   -- setup
-  -- term.start("ollama run llama2")
+  term.start("ollama run llama2")
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
