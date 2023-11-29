@@ -147,7 +147,10 @@ function Ollero.run_model()
           return
         end
 
-        term.start("ollama run " .. choice)
+        ollama.run(choice, function(cmd)
+          term.send(term.termcode("<C-d>"))
+          term.send(cmd)
+        end)
       end
     )
   end)

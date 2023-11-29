@@ -36,6 +36,15 @@ function Ollama.install(model, callback)
 end
 
 ---@param model string
+---@param callback function(input string) | nil
+function Ollama.run(model, callback)
+  vim.notify("Running " .. model .. "...")
+  local sh_script = "ollama run " .. model
+  local cb = (callback or noop)
+  return cb(sh_script)
+end
+
+---@param model string
 ---@param callback function | nil
 function Ollama.rm(model, callback)
   local sh_script = "ollama rm " .. model
