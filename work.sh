@@ -11,7 +11,10 @@ fi
 echo "Opening workspace..."
 
 # setup windows
-tmux new -s $session -n modmon -c ~/w/marco-souza/ollero.nvim/ -d nvim && \
+tmux new \
+  -s $session -n $session \
+  -c ~/w/marco-souza/ollero.nvim/ -d \
+  nvim
 
 # select first window
 tmux select-window -t "$session:0"
