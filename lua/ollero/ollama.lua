@@ -27,11 +27,12 @@ function Ollama.list(callback)
 end
 
 ---@param model string
----@param callback function | nil
+---@param callback function(input string) | nil
 function Ollama.install(model, callback)
   vim.notify("Installing " .. model .. "...")
   local sh_script = "ollama pull " .. model
-  return exec(sh_script, callback or noop)
+  local cb = (callback or noop)
+  return cb(sh_script)
 end
 
 ---@param model string

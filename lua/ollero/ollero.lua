@@ -12,7 +12,8 @@ function Ollero.init()
   require("telescope").load_extension("ui-select")
 
   -- setup
-  term.start("ollama run llama2")
+  term.start("zsh")
+  term.send("ollama run llama2" .. term.termcode("<CR><C-l><Esc>"))
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -35,8 +36,7 @@ function Ollero.init()
 end
 
 ---Open chat
-function Ollero.chat(input)
-  P(input)
+function Ollero.chat()
   term.toggle()
 end
 
@@ -94,8 +94,10 @@ function Ollero.install_model()
       return
     end
 
-    ollama.install(model, function()
-      vim.notify(model .. " installed!")
+    ollama.install(model, function(cmd)
+      vim.notify("Ollama is installing `" .. model("`..."))
+      term.send(term.termcode("<C-d>"))
+      term.send(cmd)
     end)
   end
 
