@@ -1,13 +1,16 @@
 # 👁️llero 🦙
 
-Ollero (ollero.nvim) is a Neovim Plugin that unleashes Ollama powers to your
+> **🚧 Warning**: This project is highly under construction, but feel free to
+> test it
+
+Ollero (`ollero.nvim`) is a Neovim Plugin that unleashes Ollama powers to your
 text editor.
 
 The backlog of this project includes features like:
 
 - interact with offline LLM through Ollama API
 - manage LLMs in Neovim
-- selected to prompt
+- selected to prompt (WIP 🚧)
 - manage AI Prompts (WIP 🚧)
 - text completion (WIP 🚧)
 
@@ -15,7 +18,7 @@ The backlog of this project includes features like:
 
 You must have `ollama` installed and running on your machine
 
-> You can donwload and install Ollama from https://ollama.ai/
+> You can download and install Ollama from https://ollama.ai/
 
 Also, this plugin relies on some other libraries that should be listed as
 dependencies
@@ -26,7 +29,6 @@ dependencies
   "marco-souza/ollero.nvim",
   name = "ollero",
   dependencies = {
-    "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-ui-select.nvim",
   },
   config = function()
@@ -43,13 +45,15 @@ Install it with your plugin manager, then add a keymap to the following command:
 ## Commands
 
 # managing ollama models
-:Chat
-:RunModel <name>  # WIP 🚧
-:ListModels
-:RemoveModel
 :InstallModel
+:RemoveModel
+:ListModels
+:RunModel
 
-# manafing model files
+# interact with models
+:Chat
+
+# custom model files
 :CreateModel
 :BuildModel
 ```
