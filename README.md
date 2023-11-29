@@ -5,11 +5,11 @@ text editor.
 
 The backlog of this project includes features like:
 
-- **use offline LLM through Ollama API** (WIP 🚧)
-- manage LLMs through Neovim
-- manage AI Prompts
+- interact with offline LLM through Ollama API
+- manage LLMs in Neovim
 - selected to prompt
-- text completion
+- manage AI Prompts (WIP 🚧)
+- text completion (WIP 🚧)
 
 ## Dependencies
 
