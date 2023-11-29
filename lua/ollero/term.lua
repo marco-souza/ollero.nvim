@@ -5,15 +5,15 @@ local title = "👁️llero 🦙"
 local buf = vim.api.nvim_create_buf(false, true)
 local win = vim.api.nvim_open_win(buf, true, w.win_config({ prompt = title }))
 
+---manage terminal
+local Term = {}
+
 ---get termcodes
 ---@param code string
 ---@return string
-local function termcode(code)
+function Term.termcode(code)
   return vim.api.nvim_replace_termcodes(code, true, false, true)
 end
-
----manage terminal
-local Term = {}
 
 ---check if a buffer is visible
 ---@param buffer uv.buffer
@@ -43,6 +43,11 @@ local function show_term()
   vim.cmd("startinsert")
 end
 
+local function hide_term()
+  vim.api.nvim_win_hide(win)
+  vim.cmd("stopinsert")
+end
+
 ---toggle terminal
 function Term.toggle()
   if is_buf_hidden(buf) then
@@ -50,7 +55,7 @@ function Term.toggle()
     show_term()
   else
     -- hide
-    vim.api.nvim_win_hide(win)
+    hide_term()
   end
 end
 
@@ -62,7 +67,7 @@ function Term.start(cmd)
 
   vim.cmd("term " .. cmd)
 
-  vim.api.nvim_win_hide(win)
+  hide_term()
 end
 
 ---@param input string
@@ -75,8 +80,8 @@ function Term.send(input)
     show_term()
   end
 
-  vim.api.nvim_chan_send(vim.bo.channel, input .. termcode("<CR>"))
-  vim.api.nvim_win_hide(win)
+  vim.api.nvim_chan_send(vim.bo.channel, input .. Term.termcode("<CR>"))
+  hide_term()
 end
 
 return Term
