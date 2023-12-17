@@ -58,13 +58,10 @@ dependencies
 -- Lazy plugin
 {
   "marco-souza/ollero.nvim",
-  name = "ollero",
   dependencies = {
     "nvim-telescope/telescope-ui-select.nvim",
   },
-  config = function()
-    require("ollero").setup()
-  end,
+  config = true,
 },
 ```
 
