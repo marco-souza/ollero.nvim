@@ -12,8 +12,12 @@ function Ollero.init()
   require("telescope").load_extension("ui-select")
 
   -- setup
-  term.start("zsh")
-  term.send("ollama run llama2" .. term.termcode("<CR><C-l><Esc>"))
+  ollama.init(function()
+    ollama.run("llama2", function(cmd)
+      term.start("zsh")
+      term.send(cmd .. term.termcode("<CR><C-l><Esc>"))
+    end)
+  end)
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -121,7 +125,7 @@ function Ollero.create_model()
   if buf == -1 then
     buf = vim.api.nvim_create_buf(false, false)
     local content =
-      'FROM llama2\n\nPARAMETER temperature 1\n\nSYSTEM\n"""\nYou are Mario from Super Mario Bros. Answer as Mario, the assistant, only.\n"""'
+    'FROM llama2\n\nPARAMETER temperature 1\n\nSYSTEM\n"""\nYou are Mario from Super Mario Bros. Answer as Mario, the assistant, only.\n"""'
 
     vim.api.nvim_buf_set_name(buf, "Modelfile")
     vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, utils.split_lines(content))

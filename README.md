@@ -47,12 +47,11 @@ The backlog of this project includes features like:
 
 ## Dependencies
 
-You must have `ollama` installed and running on your machine
+Ollero will run [ollama inside docker](https://ollama.ai/blog/ollama-is-now-available-as-an-official-docker-image), so you must have `docker` installed and running on your machine.
 
-> You can download and install Ollama from https://ollama.ai/
+> You can download and install docker from https://www.docker.com/
 
-Also, this plugin relies on some other libraries that should be listed as
-dependencies
+Also, this plugin relies on some other libraries that should be listed as dependencies
 
 ```lua
 -- Lazy plugin
