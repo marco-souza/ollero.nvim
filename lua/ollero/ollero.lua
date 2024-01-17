@@ -1,7 +1,11 @@
 local utils = require("shared.utils")
-local term = require("ollero.term")
+local Term = require("term.term")
 local ollama = require("ollero.ollama")
 local commands = require("ollero.commands")
+
+local term = Term:new({
+  title = "👁️🦙 Ask Ollero ",
+})
 
 ---Manage Window and Ollama interaction
 local Ollero = {}
@@ -14,8 +18,8 @@ function Ollero.init()
   -- setup
   ollama.init(function()
     ollama.run("llama2", function(cmd)
-      term.start("zsh")
-      term.send(cmd .. term.termcode("<CR><C-l><Esc>"))
+      term:start("zsh")
+      term:send(cmd .. term:termcode("<CR><C-l><Esc>"))
     end)
   end)
 
@@ -41,18 +45,20 @@ end
 
 ---Open chat
 function Ollero.chat()
-  term.toggle()
+  term.win:toggle()
 end
 
 ---Open search selection
 function Ollero.search_selection()
+  -- FIXME: make v select work
   local selected_text = utils.get_visual_selection()
-  term.send(selected_text)
+  term:send(selected_text)
 end
 
 ---List Models
 function Ollero.list_models()
   ollama.list(function(output)
+    vim.notify(output)
     local options = utils.split_lines(output)
 
     ---@param choice string
@@ -100,8 +106,8 @@ function Ollero.install_model()
 
     ollama.install(model, function(cmd)
       vim.notify("Ollama is installing `" .. model .. "`...")
-      term.send(term.termcode("<C-d>"))
-      term.send(cmd)
+      term:send(term:termcode("<C-d>"))
+      term:send(cmd)
     end)
   end
 
@@ -152,8 +158,8 @@ function Ollero.run_model()
         end
 
         ollama.run(choice, function(cmd)
-          term.send(term.termcode("<C-d>"))
-          term.send(cmd)
+          term:send(term:termcode("<C-d>"))
+          term:send(cmd)
         end)
       end
     )

@@ -58,6 +58,7 @@ Also, this plugin relies on some other libraries that should be listed as depend
 {
   "marco-souza/ollero.nvim",
   dependencies = {
+    "marco-souza/term.nvim",
     "nvim-telescope/telescope-ui-select.nvim",
   },
   config = true,

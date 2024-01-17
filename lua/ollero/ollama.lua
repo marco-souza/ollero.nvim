@@ -34,8 +34,7 @@ end
 
 ---@param callback function | nil
 function Ollama.list(callback)
-  local sh_script = ollama_cmd
-      .. " ls | grep : | awk '{ print $1 }' | awk -F ':' '{ print $1 }' "
+  local sh_script = ollama_cmd .. " ls | grep : | " .. "awk '{ print $1 }'"
   return exec(sh_script, callback or noop)
 end
 
