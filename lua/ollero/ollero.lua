@@ -107,6 +107,11 @@ function Ollero.install_model()
       vim.notify("Ollama is installing `" .. model .. "`...")
       term:send(term:termcode("<C-d>"))
       term:send(cmd)
+
+      ollama.run(model, function(install_cmd)
+        term:send(install_cmd)
+        term:send(term:termcode("<C-l>"))
+      end)
     end)
   end
 
