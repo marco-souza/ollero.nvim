@@ -1,8 +1,8 @@
 local noop = require("shared.utils").noop
 local exec = require("shared.utils").exec
+local commands = require("ollero.commands")
 
 -- run with docker
-local docker_base_cmd = "docker exec ollama "
 local Ollama = {}
 
 ---@param callback function(options: string) | nil
@@ -34,50 +34,60 @@ end
 
 ---@param callback function | nil
 function Ollama.list(callback)
-  local sh_script = docker_base_cmd .. "ollama ls | grep : | awk '{ print $1 }'"
-  return exec(sh_script, callback or noop)
+  local shell_cmd = commands.CommandBuilder
+      :new()
+      :run("ollama ls | grep : | awk '{ print $1 }'")
+      :build()
+  return exec(shell_cmd, callback or noop)
 end
 
 ---@param model string
 ---@param callback function(input string) | nil
 function Ollama.install(model, callback)
   vim.notify("Installing " .. model .. "...")
-  local sh_script = docker_base_cmd .. "ollama pull " .. model
+  local shell_cmd =
+      commands.CommandBuilder:new():run("ollama pull " .. model):build()
   local cb = (callback or noop)
-  return cb(sh_script)
+  return cb(shell_cmd)
 end
 
 ---@param model string
 ---@param callback function(input string) | nil
 function Ollama.run(model, callback)
   vim.notify("Running " .. model .. "...")
-  local sh_script = ollama_cmd .. " run " .. model
+  local shell_cmd = commands.CommandBuilder
+      :new()
+      :run("ollama run " .. model)
+      :interactive()
+      :build()
   local cb = (callback or noop)
-  return cb(sh_script)
+  return cb(shell_cmd)
 end
 
 ---@param model string
 ---@param callback function | nil
 function Ollama.rm(model, callback)
-  local sh_script = docker_base_cmd .. "ollama rm " .. model
-  return exec(sh_script, callback or noop)
+  local shell_cmd =
+      commands.CommandBuilder:new():run("ollama rm " .. model):build()
+  return exec(shell_cmd, callback or noop)
 end
 
 ---@param filepath string
 ---@param callback function
 function Ollama.create_model(filepath, callback)
-  -- local sh_script = ollama_cmd .. " ls | grep : | awk '{ printf \"%sv;%s;%s %s;%s %s %s\\n\", $1, $2, $3, $4, $5, $6, $7 }'"
-  local sh_script = docker_base_cmd .. "ollama create " .. filepath
-  return exec(sh_script, callback or noop)
+  local shell_cmd =
+      commands.CommandBuilder:new():run("ollama create " .. filepath):build()
+  return exec(shell_cmd, callback or noop)
 end
 
 ---@param model_name string
 ---@param callback function
 function Ollama.build_model(model_name, callback)
-  local sh_script = docker_base_cmd
-      .. "ollama create -f Modelfile "
-      .. model_name
-  return exec(sh_script, callback or noop)
+  local shell_cmd = commands.CommandBuilder
+      :new()
+      :run("ollama create -f Modelfile " .. model_name)
+      :build()
+  return exec(shell_cmd, callback or noop)
 end
 
 return Ollama

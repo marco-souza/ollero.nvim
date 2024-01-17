@@ -159,6 +159,7 @@ function Ollero.run_model()
         ollama.run(choice, function(cmd)
           term:send(term:termcode("<C-d>"))
           term:send(cmd)
+          term:send(term:termcode("<C-l>"))
         end)
       end
     )
