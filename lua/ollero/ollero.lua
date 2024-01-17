@@ -58,8 +58,7 @@ end
 ---List Models
 function Ollero.list_models()
   ollama.list(function(output)
-    vim.notify(output)
-    local options = utils.split_lines(output)
+    local options = utils.split(output)
 
     ---@param choice string
     local function on_select(choice)
@@ -73,7 +72,7 @@ end
 ---Remove Model
 function Ollero.remove_model()
   ollama.list(function(output)
-    local options = utils.split_lines(output)
+    local options = utils.split(output)
 
     ---@param model string
     local function on_select(model)
@@ -134,7 +133,7 @@ function Ollero.create_model()
     'FROM llama2\n\nPARAMETER temperature 1\n\nSYSTEM\n"""\nYou are Mario from Super Mario Bros. Answer as Mario, the assistant, only.\n"""'
 
     vim.api.nvim_buf_set_name(buf, "Modelfile")
-    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, utils.split_lines(content))
+    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, utils.split(content))
   end
 
   local win = vim.api.nvim_get_current_win()
@@ -147,7 +146,7 @@ end
 ---Run Model
 function Ollero.run_model()
   ollama.list(function(output)
-    local options = utils.split_lines(output)
+    local options = utils.split(output)
 
     vim.ui.select(
       options,

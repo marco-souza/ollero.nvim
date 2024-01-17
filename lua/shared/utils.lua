@@ -14,9 +14,11 @@ end
 
 local M = {}
 
-function M.split_lines(str)
+function M.split(str, sep)
   local lines = {}
-  for s in str:gmatch("[^\r\n]+") do
+  sep = sep or "\n"
+
+  for s in str:gmatch("[^\r" .. sep .. "]+") do
     table.insert(lines, s)
   end
 
