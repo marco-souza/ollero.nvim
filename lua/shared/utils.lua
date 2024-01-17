@@ -27,17 +27,9 @@ end
 
 function M.noop() end
 
-function M.exec(shellCmd, callback)
-  local handler = io.popen(shellCmd)
-  if not handler then
-    return error("Cannot execute shell command")
-  end
-
-  local output = handler:read("*a")
-  handler:close()
-
+function M.exec(shell_cmd, callback)
+  local output = vim.fn.system(shell_cmd)
   callback(output)
-
   return output
 end
 
