@@ -45,6 +45,10 @@ The backlog of this project includes features like:
 - ~manage AI Prompts~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - text completion (WIP 🚧)
 
+## Demo
+
+https://www.loom.com/share/a61362b16dc94c4b82426a03f0797099
+
 ## Dependencies
 
 Ollero will run [ollama](https://ollama.ai/), so you must have `ollama` installed and running on your machine.
