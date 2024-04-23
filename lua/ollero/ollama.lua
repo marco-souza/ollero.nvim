@@ -2,7 +2,6 @@ local noop = require("shared.utils").noop
 local exec = require("shared.utils").exec
 local commands = require("ollero.commands")
 
--- run with docker
 local Ollama = {}
 
 ---@param callback function(options: string) | nil
@@ -23,6 +22,10 @@ end
 
 ---@param callback function | nil
 function Ollama.init(callback)
+  -- disable init
+  return
+
+  -- TODO: ensure ollama is installed
   local ollama_init = [[
   [ "$(docker ps | grep ollama)" = "" ] && ( \
       docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama || \
@@ -58,7 +61,6 @@ function Ollama.run(model, callback)
   local shell_cmd = commands.CommandBuilder
       :new()
       :run("ollama run " .. model)
-      :interactive()
       :build()
   local cb = (callback or noop)
   return cb(shell_cmd)
