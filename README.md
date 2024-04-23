@@ -41,8 +41,8 @@ The backlog of this project includes features like:
 
 - interact with offline LLM through Ollama API
 - manage LLMs in Neovim
-- selected to prompt (WIP 🚧)
-- manage AI Prompts (WIP 🚧)
+- ~selected to prompt~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
+- ~manage AI Prompts~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - text completion (WIP 🚧)
 
 ## Dependencies
