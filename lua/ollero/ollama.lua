@@ -22,17 +22,16 @@ end
 
 ---@param callback function | nil
 function Ollama.init(callback)
-  -- disable init
-  return
-
   -- TODO: ensure ollama is installed
-  local ollama_init = [[
-  [ "$(docker ps | grep ollama)" = "" ] && ( \
-      docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama || \
-      docker restart ollama \
-    )
-  ]]
-  return exec(ollama_init, callback or noop)
+  local cb = callback or noop
+  return cb()
+  -- local ollama_init = [[
+  -- [ "$(docker ps | grep ollama)" = "" ] && ( \
+  --     docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama || \
+  --     docker restart ollama \
+  --   )
+  -- ]]
+  -- return exec(ollama_init, callback or noop)
 end
 
 ---@param callback function | nil
