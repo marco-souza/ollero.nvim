@@ -24,7 +24,7 @@ function CommandBuilder:new(opts)
 
   setmetatable(obj, self)
   self.__index = self
-  
+
   return obj
 end
 

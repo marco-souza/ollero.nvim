@@ -11,14 +11,16 @@ local term = Term:new({
 local Ollero = {}
 
 ---Initialize Ollero module
-function Ollero.init()
+function Ollero.init(opts)
   -- dependencies setup
   require("telescope").load_extension("ui-select")
 
+  local model = opts.model or "llama3";
+
   -- setup
   ollama.init(function()
-    ollama.run("llama2", function(cmd)
-      term:start("zsh")
+    ollama.run(model, function(cmd)
+      term:start("zsh") -- init terminal
       term:send(cmd .. term:termcode("<CR><C-l><Esc>"))
     end)
   end)
