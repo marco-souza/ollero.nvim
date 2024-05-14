@@ -41,7 +41,7 @@ The backlog of this project includes features like:
 
 - interact with offline LLM through Ollama API
 - manage LLMs in Neovim
-- (new 🚀) generate `Modelfile` based on prompt input _(using [marco-souza/omg](https://github.com/marco-souza/omg)_
+- (new 🚀) generate `Modelfile` based on prompt input _(using [marco-souza/omg](https://github.com/marco-souza/omg))_
 - ~selected to prompt~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - ~manage AI Prompts~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - text completion (WIP 🚧)
