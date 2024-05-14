@@ -3,8 +3,7 @@ local Term = require("term.term")
 local ollama = require("ollero.ollama")
 local commands = require("ollero.commands")
 
-local term = Term:new({
-  title = "👁️🦙 Ask Ollero ",
+local term = Term:new({ title = "👁️🦙 Ask Ollero ",
 })
 
 ---Manage Window and Ollama interaction
@@ -133,21 +132,39 @@ end
 
 ---Create Model
 function Ollero.create_model()
-  local buf = utils.find_buffer_by_name("Modelfile")
-  if buf == -1 then
-    buf = vim.api.nvim_create_buf(false, false)
-    local content =
-    'FROM llama2\n\nPARAMETER temperature 1\n\nSYSTEM\n"""\nYou are Mario from Super Mario Bros. Answer as Mario, the assistant, only.\n"""'
+  local filename = "Modelfile"
+  vim.ui.input({ prompt = "Enter model name: " }, function(input)
+    local job = require('plenary.job')
 
-    vim.api.nvim_buf_set_name(buf, "Modelfile")
-    vim.api.nvim_buf_set_text(buf, 0, 0, 0, 0, utils.split(content))
-  end
+    local omg_job = job:new({
+      command = 'omg',
+      args = { 'generate', input },
+      on_exit = function(j, exit_code)
+        local content = table.concat(j:result(), "\n")
 
-  local win = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(win, buf)
+        if exit_code ~= 0 then
+          print("Error!", content)
+          return nil
+        end
 
-  vim.cmd("w")
-  vim.cmd("startinsert")
+        -- write to Modelfile
+        local with = require('plenary.context_manager').with
+        local open = require('plenary.context_manager').open
+
+        with(open(filename, "w"), function(writer)
+          print(content)
+          writer:write(content)
+        end)
+
+        vim.schedule(function()
+          -- dispatch to main thread
+          vim.cmd("e Modelfile")
+        end)
+      end,
+    })
+
+    omg_job:start()
+  end)
 end
 
 ---Run Model
