@@ -41,6 +41,7 @@ The backlog of this project includes features like:
 
 - interact with offline LLM through Ollama API
 - manage LLMs in Neovim
+- (new 🚀) generate `Modelfile` based on prompt input _(using [marco-souza/omg](https://github.com/marco-souza/omg)_
 - ~selected to prompt~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - ~manage AI Prompts~ _(Implemented by [David-Kunz/gen.nvim](https://github.com/David-Kunz/gen.nvim))_
 - text completion (WIP 🚧)
@@ -59,6 +60,7 @@ Also, this plugin relies on some other libraries that should be listed as depend
 -- Lazy plugin
 {
   "marco-souza/ollero.nvim",
+  build = ":!go install github.com/marco-souza/omg@latest",
   dependencies = {
     "nvim-lua/plenary.nvim",
     "marco-souza/term.nvim",
