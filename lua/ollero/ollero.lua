@@ -152,7 +152,6 @@ function Ollero.create_model()
         local open = require('plenary.context_manager').open
 
         with(open(filename, "w"), function(writer)
-          print(content)
           writer:write(content)
         end)
 
