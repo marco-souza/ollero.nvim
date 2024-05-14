@@ -138,7 +138,7 @@ function Ollero.create_model()
 
     local omg_job = job:new({
       command = 'omg',
-      args = { 'generate', input },
+      args = { input },
       on_exit = function(j, exit_code)
         local content = table.concat(j:result(), "\n")
 
