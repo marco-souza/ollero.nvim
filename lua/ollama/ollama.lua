@@ -50,27 +50,6 @@ local default_opts = {
   remote = false,
 }
 
--- List available Ollama models
----@param opts OllamaListOptions
-function M.list(opts)
-  opts = opts or {}
-  opts = vim.tbl_extend("force", default_opts, opts)
-
-  logger.debug("Listing available models...", opts)
-
-  if opts.remote then
-    -- TODO: list remote models with plenary.curl
-    vim.notify("Listing remote models is wook-in-progress", vim.log.levels.ERROR)
-    return
-  end
-
-  local shell_cmd = {
-    'ollama',
-    'list',
-  }
-  return vim.fn.system(vim.iter(shell_cmd):join(" "))
-end
-
 -- Remove Ollama model
 ---@param model string
 function M.remove(model)

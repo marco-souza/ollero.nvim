@@ -2,6 +2,7 @@ local utils    = require("shared.utils")
 local di       = require("di")
 local ollama   = require("ollero.ollama")
 local commands = require("ollero.commands")
+local curl     = require("plenary.curl")
 
 local term     = di.resolve("term")
 local logger   = di.resolve("logger")
@@ -74,16 +75,25 @@ end
 
 ---List Models
 function Ollero.list_models()
-  ollama.list(function(output)
-    local options = utils.split(output)
+  vim.print("Listing models...")
+  -- WARN:: calling this temporary ollama json API
+  local res = curl.get("https://ollama-models.zwz.workers.dev/", { accept = "application/json", })
+  local data = vim.json.decode(res.body)
+  local options = {}
 
-    ---@param choice string
-    local function on_select(choice)
-      vim.notify("Selected model: " .. choice)
-    end
+  for _, model in ipairs(data.models) do
+    table.insert(options, model.name)
+  end
 
-    vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
-  end)
+  ---@param choice string
+  local function on_select(choice)
+    vim.notify("Selected model: " .. choice)
+    term.win:show()
+    term:send(term:termcode("<C-d>")) -- stop
+    di.resolve("ollama").run(choice)  -- kickoff new model
+  end
+
+  vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
 end
 
 ---Remove Model
