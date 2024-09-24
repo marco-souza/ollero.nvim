@@ -1,14 +1,15 @@
-local utils    = require("shared.utils")
-local di       = require("di")
-local ollama   = require("ollero.ollama")
-local commands = require("ollero.commands")
-local curl     = require("plenary.curl")
+local utils     = require("shared.utils")
+local di        = require("di")
+local ollama    = require("ollero.ollama")
+local commands  = require("ollero.commands")
+local curl      = require("plenary.curl")
 
-local term     = di.resolve("term")
-local logger   = di.resolve("logger")
+local term      = di.resolve("term")
+local logger    = di.resolve("logger")
+local ollama_v2 = di.resolve("ollama")
 
 ---Manage Window and Ollama interaction
-local Ollero   = {}
+local Ollero    = {}
 
 ---Initialize Ollero module
 function Ollero.init(opts)
@@ -19,7 +20,7 @@ function Ollero.init(opts)
 
   -- setup
   term.win:show()
-  di.resolve("ollama").run(model)
+  ollama_v2.run(model)
   term.win:hide()
 
   commands.apply_commands({
@@ -66,24 +67,9 @@ function Ollero.ask(opts)
   -- di.resolve("ollama").ask(model, question)
 end
 
----Open search selection
-function Ollero.search_selection()
-  -- FIXME: make v select work
-  local selected_text = utils.get_visual_selection()
-  term:send(selected_text)
-end
-
 ---List Models
 function Ollero.list_models()
-  vim.print("Listing models...")
-  -- WARN:: calling this temporary ollama json API
-  local res = curl.get("https://ollama-models.zwz.workers.dev/", { accept = "application/json", })
-  local data = vim.json.decode(res.body)
-  local options = {}
-
-  for _, model in ipairs(data.models) do
-    table.insert(options, model.name)
-  end
+  local options = ollama_v2.fetch_ollama_models()
 
   ---@param choice string
   local function on_select(choice)
@@ -124,8 +110,9 @@ end
 
 ---Install Model
 function Ollero.install_model()
-  ---@param model string
-  local function on_select(model)
+  local options = ollama_v2.fetch_ollama_models()
+
+  vim.ui.select(options, { prompt = "🗂️ Install a model" }, function(model)
     if model == nil then
       return
     end
@@ -140,10 +127,6 @@ function Ollero.install_model()
         term:send(term:termcode("<C-l>"))
       end)
     end)
-  end
-
-  ollama.list_remote(function(options)
-    vim.ui.select(options, { prompt = "🗂️ Install a model" }, on_select)
   end)
 end
 

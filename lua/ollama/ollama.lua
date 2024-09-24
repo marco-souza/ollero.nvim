@@ -1,6 +1,7 @@
-local logger = require("plenary.log"):new()
+local di = require("di")
+local curl = require("plenary.curl")
 
-logger.level = "debug"
+local logger = di.resolve("logger")
 
 local M = {}
 
@@ -23,44 +24,24 @@ function M.run(model)
   vim.cmd(vim.iter(shell_cmd):join(" "))
 end
 
--- Ask ollama
----@param model OllamaModel
----@param question string
-function M.ask(model, question)
-  -- TODO: stream output
-  logger.debug("Asking " .. model .. "...")
-
-  local shell_cmd = {
-    'e',
-    'term://ollama',
-    'run',
-    model,
-    "'" .. question .. "'",
-  }
-
-  vim.cmd(vim.iter(shell_cmd):join(" "))
-end
-
 ---@class OllamaListOptions
 ---@field remote boolean
 
--- Default opts
----@type OllamaListOptions
-local default_opts = {
-  remote = false,
-}
+-- List Ollama models
+---@return OllamaModel[]
+function M.fetch_ollama_models()
+  vim.print("Listing models...")
 
--- Remove Ollama model
----@param model string
-function M.remove(model)
-  logger.debug("Removing " .. model .. "...")
-  local shell_cmd = {
-    'ollama',
-    'remove',
-    model,
-  }
+  -- WARN:: calling this temporary ollama json API
+  local res = curl.get("https://ollama-models.zwz.workers.dev/", { accept = "application/json", })
+  local data = vim.json.decode(res.body)
+  local models = {}
 
-  return vim.fn.system(vim.iter(shell_cmd):join(" "))
+  for _, model in ipairs(data.models) do
+    table.insert(models, model.name)
+  end
+
+  return models
 end
 
 return M
