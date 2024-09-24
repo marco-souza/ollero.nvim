@@ -47,7 +47,6 @@ local M = {
       require("di").register({ name = name, value = value })
     end
 
-
     require("ollero.ollero").init(opts)
   end,
 }

@@ -12,7 +12,10 @@ end
 
 run("test module setup", function()
   assert(di.Name == "Dependency Injection", "Name is incorrect")
-  assert(di.Description == "Dependency Injection in Lua", "Description is incorrect")
+  assert(
+    di.Description == "Dependency Injection in Lua",
+    "Description is incorrect"
+  )
 end)
 
 run("test register and resolving a simple value", function()
@@ -21,6 +24,11 @@ run("test register and resolving a simple value", function()
 end)
 
 run("test register and resolving a factory function", function()
-  di.register({ name = "test", value = function() return "test" end })
+  di.register({
+    name = "test",
+    value = function()
+      return "test"
+    end,
+  })
   assert(di.resolve("test") == "test", "Value is incorrect")
 end)

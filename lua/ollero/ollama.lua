@@ -37,9 +37,9 @@ end
 ---@param callback function | nil
 function Ollama.list(callback)
   local shell_cmd = commands.CommandBuilder
-      :new()
-      :run("ollama ls | grep : | awk '{ print $1 }'")
-      :build()
+    :new()
+    :run("ollama ls | grep : | awk '{ print $1 }'")
+    :build()
   return exec(shell_cmd, callback or noop)
 end
 
@@ -48,7 +48,7 @@ end
 function Ollama.install(model, callback)
   vim.notify("Installing " .. model .. "...")
   local shell_cmd =
-      commands.CommandBuilder:new():run("ollama pull " .. model):build()
+    commands.CommandBuilder:new():run("ollama pull " .. model):build()
   local cb = (callback or noop)
   return cb(shell_cmd)
 end
@@ -57,10 +57,8 @@ end
 ---@param callback function(input string) | nil
 function Ollama.run(model, callback)
   vim.notify("Running " .. model .. "...")
-  local shell_cmd = commands.CommandBuilder
-      :new()
-      :run("ollama run " .. model)
-      :build()
+  local shell_cmd =
+    commands.CommandBuilder:new():run("ollama run " .. model):build()
   local cb = (callback or noop)
   return cb(shell_cmd)
 end
@@ -69,7 +67,7 @@ end
 ---@param callback function | nil
 function Ollama.rm(model, callback)
   local shell_cmd =
-      commands.CommandBuilder:new():run("ollama rm " .. model):build()
+    commands.CommandBuilder:new():run("ollama rm " .. model):build()
   return exec(shell_cmd, callback or noop)
 end
 
@@ -77,7 +75,7 @@ end
 ---@param callback function
 function Ollama.create_model(filepath, callback)
   local shell_cmd =
-      commands.CommandBuilder:new():run("ollama create " .. filepath):build()
+    commands.CommandBuilder:new():run("ollama create " .. filepath):build()
   return exec(shell_cmd, callback or noop)
 end
 
@@ -85,9 +83,9 @@ end
 ---@param callback function
 function Ollama.build_model(model_name, callback)
   local shell_cmd = commands.CommandBuilder
-      :new()
-      :run("ollama create -f Modelfile " .. model_name)
-      :build()
+    :new()
+    :run("ollama create -f Modelfile " .. model_name)
+    :build()
   return exec(shell_cmd, callback or noop)
 end
 

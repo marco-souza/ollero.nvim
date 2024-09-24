@@ -16,9 +16,9 @@ local M = {}
 function M.run(model)
   logger.debug("Running " .. model .. "...")
   local shell_cmd = {
-    'term',
-    'ollama',
-    'run',
+    "term",
+    "ollama",
+    "run",
     model,
   }
 

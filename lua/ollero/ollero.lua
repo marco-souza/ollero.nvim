@@ -1,21 +1,21 @@
-local utils     = require("shared.utils")
-local di        = require("di")
-local commands  = require("ollero.commands")
+local utils = require("shared.utils")
+local di = require("di")
+local commands = require("ollero.commands")
 
-local term      = di.resolve("term")
-local logger    = di.resolve("logger")
+local term = di.resolve("term")
+local logger = di.resolve("logger")
 local ollama_v2 = di.resolve("ollama")
-local ollama    = di.resolve("ollama_old")
+local ollama = di.resolve("ollama_old")
 
 ---Manage Window and Ollama interaction
-local Ollero    = {}
+local Ollero = {}
 
 ---Initialize Ollero module
 function Ollero.init(opts)
   -- dependencies setup
   require("telescope").load_extension("ui-select")
 
-  local model = opts.model or "llama3.1";
+  local model = opts.model or "llama3.1"
 
   -- setup
   term.win:show()
@@ -32,7 +32,7 @@ function Ollero.init(opts)
     ["InstallModel"] = Ollero.install_model,
     ["Ask"] = Ollero.ask,
   }, {
-    Ask = { nargs = '*' }
+    Ask = { nargs = "*" },
   })
 
   commands.apply_mappings({
@@ -76,7 +76,7 @@ function Ollero.list_models()
 
     term.win:show()
     term:send(term:termcode("<C-d>")) -- stop
-    ollama_v2.run(choice)             -- kickoff new model
+    ollama_v2.run(choice) -- kickoff new model
   end
 
   vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
@@ -86,10 +86,14 @@ end
 function Ollero.install_model()
   local options = ollama_v2.fetch_models()
 
-  vim.ui.select(options, { prompt = "📦 Select an Ollama Model to install" }, function(choice)
-    vim.notify("Installing model: " .. choice)
-    ollama_v2.install(choice) -- kickoff new model
-  end)
+  vim.ui.select(
+    options,
+    { prompt = "📦 Select an Ollama Model to install" },
+    function(choice)
+      vim.notify("Installing model: " .. choice)
+      ollama_v2.install(choice) -- kickoff new model
+    end
+  )
 end
 
 ---Remove Model
@@ -131,10 +135,10 @@ end
 function Ollero.create_model()
   local filename = "Modelfile"
   vim.ui.input({ prompt = "Enter model name: " }, function(input)
-    local job = require('plenary.job')
+    local job = require("plenary.job")
 
     local omg_job = job:new({
-      command = 'omg',
+      command = "omg",
       args = { input },
       on_exit = function(j, exit_code)
         local content = table.concat(j:result(), "\n")
@@ -145,8 +149,8 @@ function Ollero.create_model()
         end
 
         -- write to Modelfile
-        local with = require('plenary.context_manager').with
-        local open = require('plenary.context_manager').open
+        local with = require("plenary.context_manager").with
+        local open = require("plenary.context_manager").open
 
         with(open(filename, "w"), function(writer)
           writer:write(content)
