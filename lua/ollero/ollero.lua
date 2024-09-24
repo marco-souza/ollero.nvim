@@ -17,9 +17,9 @@ function Ollero.init(opts)
   local model = opts.model or "llama3.1";
 
   -- setup
-  term.win:toggle()
+  term.win:show()
   di.resolve("ollama").run(model)
-  term.win:toggle()
+  term.win:hide()
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -29,6 +29,9 @@ function Ollero.init(opts)
     ["BuildModel"] = Ollero.build_model,
     ["CreateModel"] = Ollero.create_model,
     ["InstallModel"] = Ollero.install_model,
+    ["Ask"] = Ollero.ask,
+  }, {
+    Ask = { nargs = '*' }
   })
 
   commands.apply_mappings({
@@ -44,6 +47,22 @@ end
 ---Open chat
 function Ollero.chat()
   term.win:toggle()
+end
+
+-- Ask to open gpt chat
+function Ollero.ask(opts)
+  logger.debug("Asking question: ", opts)
+
+  local question = opts.args
+  if question == nil then
+    logger.error("No question provided")
+    return
+  end
+
+  term:send(question)
+  term.win:toggle()
+  -- term:send(term:termcode("<C-d>"))
+  -- di.resolve("ollama").ask(model, question)
 end
 
 ---Open search selection

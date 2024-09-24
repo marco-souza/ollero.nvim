@@ -31,8 +31,8 @@ function M.ask(model, question)
   logger.debug("Asking " .. model .. "...")
 
   local shell_cmd = {
-    'term',
-    'ollama',
+    'e',
+    'term://ollama',
     'run',
     model,
     "'" .. question .. "'",
