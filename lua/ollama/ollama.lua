@@ -58,13 +58,13 @@ function M.install(model)
     cwd = vim.fn.stdpath("data"),
     on_stderr = function(_, data)
       -- WARN: https://github.com/ollama/ollama/issues/5349
-      vim.notify(data)
+      print(data)
     end,
     on_exit = function(j, code)
       if code == 0 then
-        vim.notify("Model " .. model .. " installed 🎉")
+        print("Model " .. model .. " installed 🎉")
       else
-        vim.notify("Failed to install model 😭" .. model)
+        print("Failed to install model 😭" .. model)
         logger.error("Failed to install model", j:stderr_result())
       end
     end,

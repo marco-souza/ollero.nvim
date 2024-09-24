@@ -35,4 +35,3 @@
 
 - refactored ollero module
 - refactored ollama module
-- 
