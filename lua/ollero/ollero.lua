@@ -1,13 +1,13 @@
-local utils = require("shared.utils")
-local Term = require("term.term")
-local ollama = require("ollero.ollama")
+local utils    = require("shared.utils")
+local di       = require("di")
+local ollama   = require("ollero.ollama")
 local commands = require("ollero.commands")
 
-local term = Term:new({ title = "👁️🦙 Ask Ollero ",
-})
+local term     = di.resolve("term")
+local logger   = di.resolve("logger")
 
 ---Manage Window and Ollama interaction
-local Ollero = {}
+local Ollero   = {}
 
 ---Initialize Ollero module
 function Ollero.init(opts)
@@ -17,12 +17,9 @@ function Ollero.init(opts)
   local model = opts.model or "llama3.1";
 
   -- setup
-  ollama.init(function()
-    ollama.run(model, function(cmd)
-      term:start("zsh") -- init terminal
-      term:send(cmd .. term:termcode("<CR><C-l><Esc>"))
-    end)
-  end)
+  term.win:toggle()
+  di.resolve("ollama").run(model)
+  term.win:toggle()
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -143,7 +140,7 @@ function Ollero.create_model()
         local content = table.concat(j:result(), "\n")
 
         if exit_code ~= 0 then
-          print("Error!", content)
+          logger.error("Error!", content)
           return nil
         end
 
