@@ -1,13 +1,14 @@
-local utils    = require("shared.utils")
-local di       = require("di")
-local ollama   = require("ollero.ollama")
-local commands = require("ollero.commands")
+local utils     = require("shared.utils")
+local di        = require("di")
+local commands  = require("ollero.commands")
 
-local term     = di.resolve("term")
-local logger   = di.resolve("logger")
+local term      = di.resolve("term")
+local logger    = di.resolve("logger")
+local ollama_v2 = di.resolve("ollama")
+local ollama    = di.resolve("ollama_old")
 
 ---Manage Window and Ollama interaction
-local Ollero   = {}
+local Ollero    = {}
 
 ---Initialize Ollero module
 function Ollero.init(opts)
@@ -17,9 +18,9 @@ function Ollero.init(opts)
   local model = opts.model or "llama3.1";
 
   -- setup
-  term.win:toggle()
-  di.resolve("ollama").run(model)
-  term.win:toggle()
+  term.win:show()
+  ollama_v2.run(model)
+  term.win:hide()
 
   commands.apply_commands({
     ["Chat"] = Ollero.chat,
@@ -29,6 +30,9 @@ function Ollero.init(opts)
     ["BuildModel"] = Ollero.build_model,
     ["CreateModel"] = Ollero.create_model,
     ["InstallModel"] = Ollero.install_model,
+    ["Ask"] = Ollero.ask,
+  }, {
+    Ask = { nargs = '*' }
   })
 
   commands.apply_mappings({
@@ -46,24 +50,45 @@ function Ollero.chat()
   term.win:toggle()
 end
 
----Open search selection
-function Ollero.search_selection()
-  -- FIXME: make v select work
-  local selected_text = utils.get_visual_selection()
-  term:send(selected_text)
+-- Ask to open gpt chat
+function Ollero.ask(opts)
+  logger.debug("Asking question: ", opts)
+
+  local question = opts.args
+  if question == nil then
+    logger.error("No question provided")
+    return
+  end
+
+  term:send(question)
+  term.win:toggle()
+  -- term:send(term:termcode("<C-d>"))
+  -- di.resolve("ollama").ask(model, question)
 end
 
 ---List Models
 function Ollero.list_models()
-  ollama.list(function(output)
-    local options = utils.split(output)
+  local options = ollama_v2.fetch_models()
 
-    ---@param choice string
-    local function on_select(choice)
-      vim.notify("Selected model: " .. choice)
-    end
+  ---@param choice string
+  local function on_select(choice)
+    vim.notify("Selected model: " .. choice)
 
-    vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
+    term.win:show()
+    term:send(term:termcode("<C-d>")) -- stop
+    ollama_v2.run(choice)             -- kickoff new model
+  end
+
+  vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
+end
+
+---List Models
+function Ollero.install_model()
+  local options = ollama_v2.fetch_models()
+
+  vim.ui.select(options, { prompt = "📦 Select an Ollama Model to install" }, function(choice)
+    vim.notify("Installing model: " .. choice)
+    ollama_v2.install(choice) -- kickoff new model
   end)
 end
 
@@ -90,31 +115,6 @@ function Ollero.remove_model()
       { prompt = "🗑️ Select a model to removed" },
       on_select
     )
-  end)
-end
-
----Install Model
-function Ollero.install_model()
-  ---@param model string
-  local function on_select(model)
-    if model == nil then
-      return
-    end
-
-    ollama.install(model, function(cmd)
-      vim.notify("Ollama is installing `" .. model .. "`...")
-      term:send(term:termcode("<C-d>"))
-      term:send(cmd)
-
-      ollama.run(model, function(install_cmd)
-        term:send(install_cmd)
-        term:send(term:termcode("<C-l>"))
-      end)
-    end)
-  end
-
-  ollama.list_remote(function(options)
-    vim.ui.select(options, { prompt = "🗂️ Install a model" }, on_select)
   end)
 end
 

@@ -1,8 +1,9 @@
 local M = {}
 
 function M.apply_commands(mappings, opts)
+  opts = opts or {}
   for command, handler in pairs(mappings) do
-    vim.api.nvim_create_user_command(command, handler, opts or {})
+    vim.api.nvim_create_user_command(command, handler, opts[command] or {})
   end
 end
 

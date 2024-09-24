@@ -1,6 +1,8 @@
-local logger = require("plenary.log"):new()
+local di = require("di")
+local curl = require("plenary.curl")
+local Job = require("plenary.job")
 
-logger.level = "debug"
+local logger = di.resolve("logger")
 
 local M = {}
 
@@ -23,65 +25,52 @@ function M.run(model)
   vim.cmd(vim.iter(shell_cmd):join(" "))
 end
 
--- Ask ollama
----@param model OllamaModel
----@param question string
-function M.ask(model, question)
-  -- TODO: stream output
-  logger.debug("Asking " .. model .. "...")
-
-  local shell_cmd = {
-    'term',
-    'ollama',
-    'run',
-    model,
-    "'" .. question .. "'",
-  }
-
-  vim.cmd(vim.iter(shell_cmd):join(" "))
-end
-
 ---@class OllamaListOptions
 ---@field remote boolean
 
--- Default opts
----@type OllamaListOptions
-local default_opts = {
-  remote = false,
-}
+-- List Ollama models
+---@return OllamaModel[]
+function M.fetch_models()
+  vim.print("Listing models...")
 
--- List available Ollama models
----@param opts OllamaListOptions
-function M.list(opts)
-  opts = opts or {}
-  opts = vim.tbl_extend("force", default_opts, opts)
+  -- WARN:: calling this temporary ollama json API
+  local url = "https://ollama-models.zwz.workers.dev/"
+  local res = curl.get(url, { accept = "application/json" })
+  local data = vim.json.decode(res.body)
+  local models = {}
 
-  logger.debug("Listing available models...", opts)
-
-  if opts.remote then
-    -- TODO: list remote models with plenary.curl
-    vim.notify("Listing remote models is wook-in-progress", vim.log.levels.ERROR)
-    return
+  for _, model in ipairs(data.models) do
+    table.insert(models, model.name)
   end
 
-  local shell_cmd = {
-    'ollama',
-    'list',
-  }
-  return vim.fn.system(vim.iter(shell_cmd):join(" "))
+  return models
 end
 
--- Remove Ollama model
----@param model string
-function M.remove(model)
-  logger.debug("Removing " .. model .. "...")
-  local shell_cmd = {
-    'ollama',
-    'remove',
-    model,
-  }
+-- Install Ollama model
+---@param model OllamaModel
+---@return any
+function M.install(model)
+  vim.print("Installing model", model)
 
-  return vim.fn.system(vim.iter(shell_cmd):join(" "))
+  local job = Job:new({
+    command = "ollama",
+    args = { "pull", model },
+    cwd = vim.fn.stdpath("data"),
+    on_stderr = function(_, data)
+      -- WARN: https://github.com/ollama/ollama/issues/5349
+      vim.notify(data)
+    end,
+    on_exit = function(j, code)
+      if code == 0 then
+        vim.notify("Model " .. model .. " installed 🎉")
+      else
+        vim.notify("Failed to install model 😭" .. model)
+        logger.error("Failed to install model", j:stderr_result())
+      end
+    end,
+  })
+
+  return job:start()
 end
 
 return M
