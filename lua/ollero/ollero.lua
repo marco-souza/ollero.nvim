@@ -1,12 +1,11 @@
 local utils     = require("shared.utils")
 local di        = require("di")
-local ollama    = require("ollero.ollama")
 local commands  = require("ollero.commands")
-local curl      = require("plenary.curl")
 
 local term      = di.resolve("term")
 local logger    = di.resolve("logger")
 local ollama_v2 = di.resolve("ollama")
+local ollama    = di.resolve("ollama_old")
 
 ---Manage Window and Ollama interaction
 local Ollero    = {}
@@ -69,17 +68,28 @@ end
 
 ---List Models
 function Ollero.list_models()
-  local options = ollama_v2.fetch_ollama_models()
+  local options = ollama_v2.fetch_models()
 
   ---@param choice string
   local function on_select(choice)
     vim.notify("Selected model: " .. choice)
+
     term.win:show()
     term:send(term:termcode("<C-d>")) -- stop
-    di.resolve("ollama").run(choice)  -- kickoff new model
+    ollama_v2.run(choice)             -- kickoff new model
   end
 
   vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
+end
+
+---List Models
+function Ollero.install_model()
+  local options = ollama_v2.fetch_models()
+
+  vim.ui.select(options, { prompt = "📦 Select an Ollama Model to install" }, function(choice)
+    vim.notify("Installing model: " .. choice)
+    ollama_v2.install(choice) -- kickoff new model
+  end)
 end
 
 ---Remove Model
@@ -105,28 +115,6 @@ function Ollero.remove_model()
       { prompt = "🗑️ Select a model to removed" },
       on_select
     )
-  end)
-end
-
----Install Model
-function Ollero.install_model()
-  local options = ollama_v2.fetch_ollama_models()
-
-  vim.ui.select(options, { prompt = "🗂️ Install a model" }, function(model)
-    if model == nil then
-      return
-    end
-
-    ollama.install(model, function(cmd)
-      vim.notify("Ollama is installing `" .. model .. "`...")
-      term:send(term:termcode("<C-d>"))
-      term:send(cmd)
-
-      ollama.run(model, function(install_cmd)
-        term:send(install_cmd)
-        term:send(term:termcode("<C-l>"))
-      end)
-    end)
   end)
 end
 

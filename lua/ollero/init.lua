@@ -17,8 +17,6 @@ local M = {
     opts = vim.tbl_deep_extend("force", default_options, opts or {})
 
     local registration_list = {
-      ollama = require("ollama.ollama"),
-      ollama_old = require("ollero.ollama"),
       term = function()
         return require("term.term"):new({ title = "👁️🦙 Ask Ollero " })
       end,
@@ -36,6 +34,12 @@ local M = {
             print(...)
           end,
         }
+      end,
+      ollama = function()
+        return require("ollama.ollama")
+      end,
+      ollama_old = function()
+        return require("ollero.ollama")
       end,
     }
 
