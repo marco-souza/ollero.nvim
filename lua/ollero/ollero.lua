@@ -32,6 +32,7 @@ function Ollero.init(opts)
     ["InstallModel"] = Ollero.install_model,
     ["Ask"] = Ollero.ask,
   }, {
+    CreateModel = { nargs = "*" },
     Ask = { nargs = "*" },
   })
 
@@ -121,38 +122,13 @@ function Ollero.build_model()
 end
 
 ---Create Model
-function Ollero.create_model()
-  local filename = "Modelfile"
-  vim.ui.input({ prompt = "Enter model name: " }, function(input)
-    local job = require("plenary.job")
-
-    local omg_job = job:new({
-      command = "omg",
-      args = { input },
-      on_exit = function(j, exit_code)
-        local content = table.concat(j:result(), "\n")
-
-        if exit_code ~= 0 then
-          logger.error("Error!", content)
-          return nil
-        end
-
-        -- write to Modelfile
-        local with = require("plenary.context_manager").with
-        local open = require("plenary.context_manager").open
-
-        with(open(filename, "w"), function(writer)
-          writer:write(content)
-        end)
-
-        vim.schedule(function()
-          -- dispatch to main thread
-          vim.cmd("e Modelfile")
-        end)
-      end,
-    })
-
-    omg_job:start()
+function Ollero.create_model(opts)
+  vim.ui.input({
+    prompt = "Enter a prompt to generate your file (enter to skip): ",
+  }, function(prompt)
+    vim.schedule(function()
+      ollama_v2.create_modelfile(prompt, opts.args)
+    end)
   end)
 end
 

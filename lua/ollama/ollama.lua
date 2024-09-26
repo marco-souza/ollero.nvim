@@ -1,6 +1,8 @@
 local di = require("di")
 local curl = require("plenary.curl")
 local Job = require("plenary.job")
+local with = require("plenary.context_manager").with
+local open = require("plenary.context_manager").open
 
 local logger = di.resolve("logger")
 
@@ -102,6 +104,59 @@ function M.remove(model)
   })
 
   return job:start()
+end
+
+local function is_valid_string(str)
+  return str and #str > 0
+end
+
+local function generate_modelfile(prompt)
+  if not is_valid_string(prompt) then
+    logger.debug("Prompt is empty, using default Modelfile")
+
+    local mario_url =
+      "https://raw.githubusercontent.com/ollama/ollama/refs/heads/main/examples/modelfile-mario/Modelfile"
+    local res = curl.get(mario_url, { accept = "application/text" })
+    local modelfile = res.body
+
+    return modelfile
+  end
+
+  logger.debug("Prompt is not empty, generating Modelfile using `omg`")
+
+  -- gnerate file using omg
+  local modelfile = vim.fn.system("omg " .. prompt)
+  return modelfile
+end
+
+---Create a new Modelfile with Ollama
+---@param prompt string
+---@param filename string
+---@return any
+function M.create_modelfile(prompt, filename)
+  prompt = prompt or ""
+  prompt = prompt or ""
+
+  logger.debug("Creating Modelfile with prompt: ", prompt)
+
+  local modelfile = generate_modelfile(prompt)
+
+  -- write to a Modelfile
+  local filepath = vim.env.PWD .. "/Modelfile"
+  if is_valid_string(filename) then
+    logger.debug("Filename provided: " .. filename)
+    filepath = vim.env.PWD .. "/" .. filename
+  end
+
+  logger.debug("Writing Modelfile to " .. filepath)
+
+  with(open(filepath, "w"), function(writer)
+    writer:write(modelfile)
+  end)
+
+  logger.debug("Modelfile created at " .. filename)
+
+  print("Modelfile created at " .. filepath .. " 🎉")
 end
 
 return M

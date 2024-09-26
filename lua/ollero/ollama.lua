@@ -18,14 +18,6 @@ function Ollama.init(callback)
   -- return exec(ollama_init, callback or noop)
 end
 
----@param filepath string
----@param callback function
-function Ollama.create_model(filepath, callback)
-  local shell_cmd =
-    commands.CommandBuilder:new():run("ollama create " .. filepath):build()
-  return exec(shell_cmd, callback or noop)
-end
-
 ---@param model_name string
 ---@param callback function
 function Ollama.build_model(model_name, callback)
