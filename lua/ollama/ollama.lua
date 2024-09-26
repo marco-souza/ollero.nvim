@@ -3,6 +3,7 @@ local curl = require("plenary.curl")
 local Job = require("plenary.job")
 local with = require("plenary.context_manager").with
 local open = require("plenary.context_manager").open
+local strings = require("shared.strings")
 
 local logger = di.resolve("logger")
 
@@ -106,12 +107,8 @@ function M.remove(model)
   return job:start()
 end
 
-local function is_valid_string(str)
-  return str and #str > 0
-end
-
 local function generate_modelfile(prompt)
-  if not is_valid_string(prompt) then
+  if not strings.is_valid(prompt) then
     logger.debug("Prompt is empty, using default Modelfile")
 
     local mario_url =
@@ -129,6 +126,16 @@ local function generate_modelfile(prompt)
   return modelfile
 end
 
+local function get_modelfile_path(filename)
+  filename = filename or ""
+  if not strings.is_valid(filename) then
+    filename = "Modelfile"
+  end
+
+  local filepath = vim.fs.joinpath(vim.env.PWD, filename)
+  return filepath
+end
+
 ---Create a new Modelfile with Ollama
 ---@param prompt string
 ---@param filename string
@@ -138,18 +145,12 @@ function M.create_modelfile(prompt, filename)
   prompt = prompt or ""
 
   logger.debug("Creating Modelfile with prompt: ", prompt)
-
   local modelfile = generate_modelfile(prompt)
 
-  -- write to a Modelfile
-  local filepath = vim.env.PWD .. "/Modelfile"
-  if is_valid_string(filename) then
-    logger.debug("Filename provided: " .. filename)
-    filepath = vim.env.PWD .. "/" .. filename
-  end
-
+  local filepath = get_modelfile_path(filename)
   logger.debug("Writing Modelfile to " .. filepath)
 
+  -- write to a Modelfile
   with(open(filepath, "w"), function(writer)
     writer:write(modelfile)
   end)
@@ -157,6 +158,37 @@ function M.create_modelfile(prompt, filename)
   logger.debug("Modelfile created at " .. filename)
 
   print("Modelfile created at " .. filepath .. " 🎉")
+end
+
+---Build a model with Ollama
+---@param name string
+---@param filename string
+---@return any
+function M.build_model(name, filename)
+  if not strings.is_valid(name or "") then
+    logger.error("Model name is empty")
+    return
+  end
+
+  local filepath = get_modelfile_path(filename)
+
+  print("Building model " .. name .. " with " .. filepath)
+
+  local job = Job:new({
+    command = "ollama",
+    args = { "create", "-f", filepath, name },
+    cwd = vim.fn.stdpath("data"),
+    on_exit = function(j, code)
+      if code == 0 then
+        print("Model " .. name .. " built 🎉")
+      else
+        print("Failed to build model 😭" .. name)
+        logger.error("Failed to build model", j:stderr_result())
+      end
+    end,
+  })
+
+  return job:start()
 end
 
 return M

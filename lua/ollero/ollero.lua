@@ -32,6 +32,7 @@ function Ollero.init(opts)
     ["InstallModel"] = Ollero.install_model,
     ["Ask"] = Ollero.ask,
   }, {
+    BuildModel = { nargs = "*" },
     CreateModel = { nargs = "*" },
     Ask = { nargs = "*" },
   })
@@ -113,10 +114,12 @@ function Ollero.remove_model()
 end
 
 ---Build Model
-function Ollero.build_model()
-  vim.ui.input({ prompt = "Enter model name: " }, function(input)
-    ollama.build_model(input, function()
-      vim.notify("Model " .. input .. " created")
+function Ollero.build_model(opts)
+  local filename = opts.args or "Modelfile"
+
+  vim.ui.input({ prompt = "Enter model name: " }, function(name)
+    vim.schedule(function()
+      ollama_v2.build_model(name, filename)
     end)
   end)
 end
