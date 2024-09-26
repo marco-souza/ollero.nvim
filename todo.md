@@ -20,11 +20,12 @@
 
 ### 🚀 Features:
 
-- added tests
 - added dependency injection system
 - added `Ask` command to interact with models
 - list ollama models from online source 🌐
 - install model in background 🤖
+- added test runner integrated with neovim
+- added tests
 
 ### 🐛 Bug Fixes:
 
@@ -35,6 +36,7 @@
 
 - refactored ollero module
 - refactored ollama module
+- move logger to a shared module
 
 ## Useful Links
 
