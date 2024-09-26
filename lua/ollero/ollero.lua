@@ -91,35 +91,24 @@ function Ollero.install_model()
     { prompt = "📦 Select an Ollama Model to install" },
     function(choice)
       vim.notify("Installing model: " .. choice)
-      ollama_v2.install(choice) -- kickoff new model
+      ollama_v2.install(choice)
     end
   )
 end
 
 ---Remove Model
 function Ollero.remove_model()
-  ollama.list(function(output)
-    local options = utils.split(output)
+  local options = ollama_v2.list()
 
-    ---@param model string
-    local function on_select(model)
-      if model == nil then
-        return
-      end
-
-      vim.notify("Removing " .. model .. "...")
-
-      ollama.rm(model, function()
-        vim.notify(model .. " removed!")
-      end)
+  vim.ui.select(
+    options,
+    { prompt = "🗑️ Select an Ollama Model to remove" },
+    function(choice)
+      vim.notify("Removing model: " .. choice)
+      ollama_v2.remove(choice)
+      vim.notify("Model " .. choice .. " removed")
     end
-
-    vim.ui.select(
-      options,
-      { prompt = "🗑️ Select a model to removed" },
-      on_select
-    )
-  end)
+  )
 end
 
 ---Build Model
