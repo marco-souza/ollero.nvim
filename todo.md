@@ -2,15 +2,15 @@
 
 1. Refactor ollero listing
   - [x] setup a DI system
-  - [~] create a new ollama version
+  - [x] create a new ollama version
       - [x] move run command
       - [x] add Ask command
       - [x] move install command
       - [x] ref list models
-      - [ ] remove model
-      - [ ] diferentiate between installed and remote models
-      - [ ] remove old ollama
-  - [ ] review & refactor ollero module
+      - [x] remove model
+      - [x] diferentiate between installed and remote models
+      - [x] remove old ollama
+  - [x] review & refactor ollero module
   - [ ] create tag-release CI automation
   - [ ] create quality gateway
   - [ ] clean up readme
@@ -20,7 +20,8 @@
 
 ### 🚀 Features:
 
-- added `Ask` command to interact with models
+- added `Ask` command to interact with models 🤖
+- send selected text (visual) to model 🤖
 - list ollama models from online source 🌐 (along with installed ones) 🤖
 - install model in background 🤖
 
