@@ -1,6 +1,7 @@
 local utils = require("shared.utils")
 local di = require("di")
 local commands = require("ollero.commands")
+local strings = require("shared.strings")
 
 local term = di.resolve("term")
 local logger = di.resolve("logger")
@@ -70,7 +71,16 @@ end
 
 ---List Models
 function Ollero.list_models()
-  local options = ollama_v2.fetch_models()
+  local options = ollama_v2.list()
+  local online_options = ollama_v2.fetch_models()
+
+  options[#options] = "-----------------"
+
+  for _, model in ipairs(online_options) do
+    if strings.is_valid(model) then
+      table.insert(options, model .. " (remote)")
+    end
+  end
 
   ---@param choice string
   local function on_select(choice)
