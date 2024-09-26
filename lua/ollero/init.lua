@@ -14,6 +14,7 @@ local default_options = {
 local M = {
   ---@param opts OlleroOptions
   setup = function(opts)
+    local logger = require("shared.logger")
     opts = vim.tbl_deep_extend("force", default_options, opts or {})
 
     local registration_list = {
@@ -21,19 +22,7 @@ local M = {
         return require("term.term"):new({ title = "👁️🦙 Ask Ollero " })
       end,
       logger = function()
-        if require("plenary") then
-          return require("plenary.log"):new({
-            plugin = "ollero",
-            use_console = false,
-            level = opts.log_level,
-          })
-        end
-
-        return {
-          debug = function(...)
-            print(...)
-          end,
-        }
+        return require("shared.logger").create_logger(opts)
       end,
       ollama = function()
         return require("ollama.ollama")
