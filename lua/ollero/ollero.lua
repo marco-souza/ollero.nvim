@@ -14,7 +14,7 @@ function Ollero.init(opts)
   -- dependencies setup
   require("telescope").load_extension("ui-select")
 
-  local model = opts.model or "llama3.1"
+  local model = opts.model or "llama3.2"
 
   -- setup
   term.win:show()
