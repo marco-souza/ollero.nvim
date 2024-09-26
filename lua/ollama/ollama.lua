@@ -122,7 +122,7 @@ local function generate_modelfile(prompt)
   logger.debug("Prompt is not empty, generating Modelfile using `omg`")
 
   -- gnerate file using omg
-  local modelfile = vim.fn.system("omg " .. prompt)
+  local modelfile = vim.fn.system("omg '" .. prompt .. "'")
   return modelfile
 end
 
