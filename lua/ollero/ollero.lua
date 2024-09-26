@@ -1,6 +1,7 @@
 local di = require("di")
 local strings = require("shared.strings")
 local commands = require("shared.commands")
+local utils = require("shared.utils")
 
 local term = di.resolve("term")
 local logger = di.resolve("logger")
@@ -41,7 +42,28 @@ function M.init(opts)
       vim.cmd("Chat")
     end,
     ["<M-s>"] = function()
-      M.search_selection()
+      -- hit <esc> to exit visual mode and mark the selection
+      local esc = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+      vim.api.nvim_feedkeys(esc, "m", false)
+
+      vim.schedule(function()
+        -- get selected text in v mode
+        local sep = "<br>"
+        local text = utils.get_selected_text(sep)
+
+        if not strings.is_valid(text) then
+          logger.error("invalid text selected", text)
+          return
+        end
+
+        local prompt = string.gsub(
+          "I want to ask some questions about the following code %sep %text %sep\n",
+          "%S+",
+          { ["%sep"] = sep, ["%text"] = text }
+        )
+
+        M.ask({ args = prompt })
+      end)
     end,
   })
 end
