@@ -7,10 +7,10 @@ local logger = di.resolve("logger")
 local ollama = di.resolve("ollama")
 
 ---Manage Window and Ollama interaction
-local Ollero = {}
+local M = {}
 
 ---Initialize Ollero module
-function Ollero.init(opts)
+function M.init(opts)
   -- dependencies setup
   require("telescope").load_extension("ui-select")
 
@@ -22,14 +22,14 @@ function Ollero.init(opts)
   term.win:hide()
 
   commands.apply_commands({
-    ["Chat"] = Ollero.chat,
-    ["RunModel"] = Ollero.run_model,
-    ["ListModels"] = Ollero.list_models,
-    ["RemoveModel"] = Ollero.remove_model,
-    ["BuildModel"] = Ollero.build_model,
-    ["CreateModel"] = Ollero.create_model,
-    ["InstallModel"] = Ollero.install_model,
-    ["Ask"] = Ollero.ask,
+    ["Chat"] = M.chat,
+    ["RunModel"] = M.run_model,
+    ["ListModels"] = M.list_models,
+    ["RemoveModel"] = M.remove_model,
+    ["BuildModel"] = M.build_model,
+    ["CreateModel"] = M.create_model,
+    ["InstallModel"] = M.install_model,
+    ["Ask"] = M.ask,
   }, {
     BuildModel = { nargs = "*" },
     CreateModel = { nargs = "*" },
@@ -41,18 +41,18 @@ function Ollero.init(opts)
       vim.cmd("Chat")
     end,
     ["<M-s>"] = function()
-      Ollero.search_selection()
+      M.search_selection()
     end,
   })
 end
 
 ---Open chat
-function Ollero.chat()
+function M.chat()
   term.win:toggle()
 end
 
 -- Ask to open gpt chat
-function Ollero.ask(opts)
+function M.ask(opts)
   logger.debug("Asking question: ", opts)
 
   local question = opts.args
@@ -66,7 +66,7 @@ function Ollero.ask(opts)
 end
 
 ---List Models
-function Ollero.list_models()
+function M.list_models()
   local options = ollama.list()
   local online_options = ollama.fetch_models()
 
@@ -91,7 +91,7 @@ function Ollero.list_models()
 end
 
 ---List Models
-function Ollero.install_model()
+function M.install_model()
   local options = ollama.fetch_models()
 
   vim.ui.select(
@@ -105,7 +105,7 @@ function Ollero.install_model()
 end
 
 ---Remove Model
-function Ollero.remove_model()
+function M.remove_model()
   local options = ollama.list()
 
   vim.ui.select(
@@ -120,7 +120,7 @@ function Ollero.remove_model()
 end
 
 ---Build Model
-function Ollero.build_model(opts)
+function M.build_model(opts)
   local filename = opts.args or "Modelfile"
 
   vim.ui.input({ prompt = "Enter model name: " }, function(name)
@@ -131,7 +131,7 @@ function Ollero.build_model(opts)
 end
 
 ---Create Model
-function Ollero.create_model(opts)
+function M.create_model(opts)
   vim.ui.input({
     prompt = "Enter a prompt to generate your file (enter to skip): ",
   }, function(prompt)
@@ -141,4 +141,4 @@ function Ollero.create_model(opts)
   end)
 end
 
-return Ollero
+return M
