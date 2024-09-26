@@ -14,7 +14,6 @@ local default_options = {
 local M = {
   ---@param opts OlleroOptions
   setup = function(opts)
-    local logger = require("shared.logger")
     opts = vim.tbl_deep_extend("force", default_options, opts or {})
 
     local registration_list = {

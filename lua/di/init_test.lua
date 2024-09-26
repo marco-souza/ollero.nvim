@@ -1,5 +1,5 @@
 --- create test in lua
-local di = require("lua.di")
+local di = require("di")
 local t = require("lua.shared.tests")
 
 t.run("test module setup", function()

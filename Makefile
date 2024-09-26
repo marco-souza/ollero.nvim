@@ -1,12 +1,10 @@
-lua_test_files = $(shell find lua -name "*_test.lua")
-
 all: pr-ready t
 
 t: tests
 test: tests
 tests:
-	@echo "===> Running tests \n" \
-  $(foreach t_file,$(lua_test_files), $(shell lua $(t_file) > /dev/null && echo '.' || echo 'F');)
+	@echo "===> Running tests \n" && \
+  nvim --headless +"lua require('lua.shared.tests').test()" +"qall"
 
 fmt:
 	echo "===> Formatting"
