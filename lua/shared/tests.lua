@@ -22,12 +22,13 @@ end
 function M.test()
   local files = vim.fs.find(
     is_test_file,
-    { type = "file", path = vim.fn.getcwd() .. "/lua" }
+    { type = "file", path = vim.fn.getcwd() .. "/lua", limit = math.huge }
   )
 
   for _, file in ipairs(files) do
     local relative_path = file:gsub(".*/ollero.nvim/lua/", "")
     local require_path = relative_path:gsub(".lua", ""):gsub("/", ".")
+
     require(require_path)
     print(".")
   end
