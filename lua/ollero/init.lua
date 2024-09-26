@@ -20,9 +20,7 @@ local M = {
       term = function()
         return require("term.term"):new({ title = "👁️🦙 Ask Ollero " })
       end,
-      logger = function()
-        return require("shared.logger").create_logger(opts)
-      end,
+      logger = require("shared.logger").create_logger(opts),
       ollama = function()
         return require("ollama.ollama")
       end,
