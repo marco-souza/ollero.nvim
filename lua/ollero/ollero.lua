@@ -1,12 +1,10 @@
-local utils = require("shared.utils")
 local di = require("di")
-local commands = require("ollero.commands")
 local strings = require("shared.strings")
+local commands = require("shared.commands")
 
 local term = di.resolve("term")
 local logger = di.resolve("logger")
-local ollama_v2 = di.resolve("ollama")
-local ollama = di.resolve("ollama_old")
+local ollama = di.resolve("ollama")
 
 ---Manage Window and Ollama interaction
 local Ollero = {}
@@ -20,7 +18,7 @@ function Ollero.init(opts)
 
   -- setup
   term.win:show()
-  ollama_v2.run(model)
+  ollama.run(model)
   term.win:hide()
 
   commands.apply_commands({
@@ -65,14 +63,12 @@ function Ollero.ask(opts)
 
   term:send(question)
   term.win:toggle()
-  -- term:send(term:termcode("<C-d>"))
-  -- di.resolve("ollama").ask(model, question)
 end
 
 ---List Models
 function Ollero.list_models()
-  local options = ollama_v2.list()
-  local online_options = ollama_v2.fetch_models()
+  local options = ollama.list()
+  local online_options = ollama.fetch_models()
 
   options[#options] = "-----------------"
 
@@ -88,7 +84,7 @@ function Ollero.list_models()
 
     term.win:show()
     term:send(term:termcode("<C-d>")) -- stop
-    ollama_v2.run(choice) -- kickoff new model
+    ollama.run(choice) -- kickoff new model
   end
 
   vim.ui.select(options, { prompt = "List of Ollama Models" }, on_select)
@@ -96,28 +92,28 @@ end
 
 ---List Models
 function Ollero.install_model()
-  local options = ollama_v2.fetch_models()
+  local options = ollama.fetch_models()
 
   vim.ui.select(
     options,
     { prompt = "📦 Select an Ollama Model to install" },
     function(choice)
       vim.notify("Installing model: " .. choice)
-      ollama_v2.install(choice)
+      ollama.install(choice)
     end
   )
 end
 
 ---Remove Model
 function Ollero.remove_model()
-  local options = ollama_v2.list()
+  local options = ollama.list()
 
   vim.ui.select(
     options,
     { prompt = "🗑️ Select an Ollama Model to remove" },
     function(choice)
       vim.notify("Removing model: " .. choice)
-      ollama_v2.remove(choice)
+      ollama.remove(choice)
       vim.notify("Model " .. choice .. " removed")
     end
   )
@@ -129,7 +125,7 @@ function Ollero.build_model(opts)
 
   vim.ui.input({ prompt = "Enter model name: " }, function(name)
     vim.schedule(function()
-      ollama_v2.build_model(name, filename)
+      ollama.build_model(name, filename)
     end)
   end)
 end
@@ -140,31 +136,8 @@ function Ollero.create_model(opts)
     prompt = "Enter a prompt to generate your file (enter to skip): ",
   }, function(prompt)
     vim.schedule(function()
-      ollama_v2.create_modelfile(prompt, opts.args)
+      ollama.create_modelfile(prompt, opts.args)
     end)
-  end)
-end
-
----Run Model
-function Ollero.run_model()
-  ollama.list(function(output)
-    local options = utils.split(output)
-
-    vim.ui.select(
-      options,
-      { prompt = "Select a model to run" },
-      function(choice)
-        if choice == nil then
-          return
-        end
-
-        ollama.run(choice, function(cmd)
-          term:send(term:termcode("<C-d>"))
-          term:send(cmd)
-          term:send(term:termcode("<C-l>"))
-        end)
-      end
-    )
   end)
 end
 

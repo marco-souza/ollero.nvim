@@ -17,15 +17,12 @@ local M = {
     opts = vim.tbl_deep_extend("force", default_options, opts or {})
 
     local registration_list = {
+      logger = require("shared.logger").create_logger(opts),
       term = function()
         return require("term.term"):new({ title = "👁️🦙 Ask Ollero " })
       end,
-      logger = require("shared.logger").create_logger(opts),
       ollama = function()
         return require("ollama.ollama")
-      end,
-      ollama_old = function()
-        return require("ollero.ollama")
       end,
     }
 
