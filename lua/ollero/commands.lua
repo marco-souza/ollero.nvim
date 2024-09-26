@@ -18,30 +18,4 @@ function M.apply_mappings(mappings)
   end
 end
 
-local CommandBuilder = {}
-
-function CommandBuilder:new(opts)
-  local obj = { internal_cmd = "" }
-
-  setmetatable(obj, self)
-  self.__index = self
-
-  return obj
-end
-
-function CommandBuilder:interactive()
-  return self
-end
-
-function CommandBuilder:run(input)
-  self.internal_cmd = input .. " "
-  return self
-end
-
-function CommandBuilder:build()
-  return self.internal_cmd
-end
-
-M.CommandBuilder = CommandBuilder
-
 return M
