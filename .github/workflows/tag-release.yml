@@ -4,8 +4,8 @@ on:
   push:
     paths:
       - plugin.json
-      - .github/workflows/gh-release.yml
-      - .github/workflows/release-tag.sh
+      - .github/workflows/tag-release.yml
+      - .github/workflows/tag-release.sh
 
 jobs:
   gh-release:
