@@ -15,5 +15,5 @@ echo "Creating tag $version"
 git tag $version && git push --tags
 
 echo "Creating release $version"
-gh release create -t $version --generate-notes --latest $version dist/*
+gh release create -t $version --generate-notes --latest $version
 
