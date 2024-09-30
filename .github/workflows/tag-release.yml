@@ -16,6 +16,6 @@ jobs:
           fetch-depth: 0
 
       - name: Create release with tag
-        run: sh .github/workflows/release-tag.sh
+        run: sh .github/workflows/tag-release.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
