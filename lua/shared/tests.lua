@@ -26,6 +26,7 @@ function M.test()
   )
 
   -- setup resolution path
+  vim.print(package)
   package.path = package.path .. ";./lua/?.lua"
 
   for _, file in ipairs(files) do
