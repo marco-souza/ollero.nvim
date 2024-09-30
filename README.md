@@ -37,8 +37,7 @@
 Ollero (`ollero.nvim`) is a Neovim Plugin that unleashes Ollama powers to your
 text editor.
 
-The backlog of this project includes features like:
-
+**🚀 Features**
 - interact with offline LLM using Ollama - https://ollama.com/
 - manage Ollama models in Neovim
 - Chat with the default model using `<M-a>`
