@@ -1,5 +1,5 @@
 {
   "name": "marco-souza/ollero.nvim",
   "description": "A plugin to open an input box for chating with Ollama",
-  "version": "0.1.1"
+  "version": "0.1.6"
 }
