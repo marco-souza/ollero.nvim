@@ -1,14 +1,15 @@
 local M = {}
 
-local log = require("shared.logger").create_logger({ log_level = "debug" })
+-- setup resolution path
+package.path = package.path .. ";./lua/?.lua"
 
 --- Run a test
 ---@param name string
 ---@param cb function
 function M.run(name, cb)
-  log.debug("Running test: " .. name)
+  print(string.format("Running test: %s", name))
   cb()
-  log.debug("Test passed: " .. name)
+  print(string.format("Test passed: %s", name))
 end
 
 ---Check if a file is a test file

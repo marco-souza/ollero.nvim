@@ -1,0 +1,18 @@
+name: Quality Gateway
+
+on:
+  push:
+
+jobs:
+  quality-gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: install dependencies
+        run: sudo apt update && sudo apt install -y neovim
+
+      - name: Run tests
+        run: make tests
