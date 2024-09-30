@@ -2,7 +2,7 @@ local M = {}
 
 -- setup resolution path
 package.path = package.path .. ";./lua/?.lua"
-vim.print(package)
+vim.print({ package = package, path = package.path })
 
 local log = require("shared.logger").create_logger({ log_level = "debug" })
 
