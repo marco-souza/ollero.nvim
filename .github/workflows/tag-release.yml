@@ -1,0 +1,21 @@
+name: Tag release
+
+on:
+  push:
+    paths:
+      - plugin.json
+      - .github/workflows/gh-release.yml
+      - .github/workflows/release-tag.sh
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create release with tag
+        run: sh .github/workflows/release-tag.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
