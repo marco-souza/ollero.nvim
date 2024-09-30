@@ -25,6 +25,9 @@ function M.test()
     { type = "file", path = vim.fn.getcwd() .. "/lua", limit = math.huge }
   )
 
+  -- setup resolution path
+  package.path = package.path .. ";./lua/?.lua"
+
   for _, file in ipairs(files) do
     local relative_path = file:gsub(".*/ollero.nvim/lua/", "")
     local require_path = relative_path:gsub(".lua", ""):gsub("/", ".")
