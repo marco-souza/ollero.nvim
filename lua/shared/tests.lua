@@ -1,5 +1,9 @@
 local M = {}
 
+-- setup resolution path
+package.path = package.path .. ";./lua/?.lua"
+vim.print(package)
+
 local log = require("shared.logger").create_logger({ log_level = "debug" })
 
 --- Run a test
@@ -24,10 +28,6 @@ function M.test()
     is_test_file,
     { type = "file", path = vim.fn.getcwd() .. "/lua", limit = math.huge }
   )
-
-  -- setup resolution path
-  vim.print(package)
-  package.path = package.path .. ";./lua/?.lua"
 
   for _, file in ipairs(files) do
     local relative_path = file:gsub(".*/ollero.nvim/lua/", "")
