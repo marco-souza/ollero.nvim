@@ -11,12 +11,12 @@
       - [x] diferentiate between installed and remote models
       - [x] remove old ollama
   - [x] review & refactor ollero module
-  - [ ] create tag-release CI automation
-  - [ ] create quality gateway
-  - [ ] clean up readme
+  - [x] create tag-release CI automation
+  - [x] create quality gateway
+  - [x] clean up readme
 
 
-## Change Log - v2.0.0
+## Change Log - v1.0.0
 
 ### 🚀 Features:
 
@@ -37,6 +37,7 @@
 - refactored ollero module
 - refactored ollama module
 - move logger to a shared module
+- add ci workflows for tag release and quality gateway
 
 ## Useful Links
 
