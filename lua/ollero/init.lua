@@ -2,7 +2,7 @@ Name = "Ollero"
 Description = "A plugin to open an input box for chating with Ollama"
 
 ---@class OlleroOptions
----@field model OllamaModels -- any model present at https://ollama.ai/models
+---@field model OllamaModel -- any model present at https://ollama.ai/models
 ---@field log_level 'debug' | 'info' | 'warn' | 'error'
 
 ---@type OlleroOptions
