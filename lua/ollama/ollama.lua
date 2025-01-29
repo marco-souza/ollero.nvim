@@ -9,13 +9,10 @@ local logger = di.resolve("logger")
 
 local M = {}
 
----@alias OllamaModel
----| 'llama2'
----| 'llama3'
----| 'llama3.1'
+---@alias OllamaModels string -- Ollama model name present at https://ollama.ai/models
 
 -- Run Ollama with a given model
----@param model OllamaModel
+---@param model OllamaModels
 function M.run(model)
   logger.debug("Running " .. model .. "...")
   local shell_cmd = {
@@ -29,7 +26,7 @@ function M.run(model)
 end
 
 -- List Ollama models
----@return OllamaModel[]
+---@return OllamaModels[]
 function M.fetch_models()
   vim.print("Listing models...")
 
@@ -47,7 +44,7 @@ function M.fetch_models()
 end
 
 -- Install Ollama model
----@param model OllamaModel
+---@param model OllamaModels
 ---@return any
 function M.install(model)
   vim.print("Installing model", model)
@@ -74,7 +71,7 @@ function M.install(model)
 end
 
 ---List installed models
----@return OllamaModel[]
+---@return OllamaModels[]
 function M.list()
   vim.print("Listing models...")
 
@@ -85,7 +82,7 @@ function M.list()
 end
 
 -- Remove Ollama model
----@param model OllamaModel
+---@param model OllamaModels
 ---@return any
 function M.remove(model)
   vim.print("Removing model", model)
