@@ -15,7 +15,7 @@ function M.init(opts)
   -- dependencies setup
   require("telescope").load_extension("ui-select")
 
-  local model = opts.model or "llama3.2"
+  local model = opts.model or "deepseek-r1:8b"
 
   -- setup
   term.win:show()

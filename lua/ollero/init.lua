@@ -7,7 +7,7 @@ Description = "A plugin to open an input box for chating with Ollama"
 
 ---@type OlleroOptions
 local default_options = {
-  model = "llama3.1",
+  model = "deepseek-r1:8b",
   log_level = "debug",
 }
 
