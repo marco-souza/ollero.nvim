@@ -36,10 +36,10 @@ function M.fetch_models()
   -- WARN:: calling this temporary ollama json API
   local url = "https://ollama-models.zwz.workers.dev/"
   local res = curl.get(url, { accept = "application/json" })
-  local data = vim.json.decode(res.body)
+  local response_models = vim.json.decode(res.body)
   local models = {}
 
-  for _, model in ipairs(data.models) do
+  for _, model in ipairs(response_models) do
     table.insert(models, model.name)
   end
 
