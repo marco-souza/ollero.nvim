@@ -78,16 +78,16 @@ Install it with your plugin manager, then add a keymap to the following command:
 ## Commands
 
 # managing ollama models
-:InstallModel
-:RemoveModel
-:ListModels
-:RunModel
+:OlleroInstall
+:OlleroRemove
+:OlleroList
+:OlleroRun
 
 # interact with models
-:Chat
-:Ask
+:OlleroChat
+:OlleroAsk
 
 # custom model files
-:CreateModel
-:BuildModel
+:OlleroCreate
+:OlleroBuild
 ```
