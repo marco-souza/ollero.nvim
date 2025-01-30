@@ -23,14 +23,14 @@ function M.init(opts)
   term.win:hide()
 
   commands.apply_commands({
-    ["Chat"] = M.chat,
-    ["RunModel"] = M.run_model,
-    ["ListModels"] = M.list_models,
-    ["RemoveModel"] = M.remove_model,
-    ["BuildModel"] = M.build_model,
-    ["CreateModel"] = M.create_model,
-    ["InstallModel"] = M.install_model,
-    ["Ask"] = M.ask,
+    ["OlleroChat"] = M.chat,
+    ["OlleroRun"] = M.run_model,
+    ["OlleroListModels"] = M.list_models,
+    ["OlleroRemove"] = M.remove_model,
+    ["OlleroBuild"] = M.build_model,
+    ["OlleroCreate"] = M.create_model,
+    ["OlleroInstall"] = M.install_model,
+    ["OlleroAsk"] = M.ask,
   }, {
     BuildModel = { nargs = "*" },
     CreateModel = { nargs = "*" },
@@ -39,7 +39,7 @@ function M.init(opts)
 
   commands.apply_mappings({
     ["<M-a>"] = function()
-      vim.cmd("Chat")
+      vim.cmd("OlleroChat")
     end,
     ["<M-s>"] = function()
       -- hit <esc> to exit visual mode and mark the selection
